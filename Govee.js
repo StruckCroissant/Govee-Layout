@@ -416,6 +416,15 @@ const GoveeDeviceLibrary = {
 		supportFeast: false,
 		ledCount: 1
 	},
+	H61C2: {
+		productName: "RGBIC LED Neon Rope Lights for Desks",
+		imageUrl: "",
+		sku: "H61C2",
+		state: 1,
+		supportRazer: true,
+		supportFeast: true,
+		ledCount: 16
+	},
 	H61C3: {
 		productName: "RGBIC LED Neon Rope Lights for Desks",
 		imageUrl: "",
