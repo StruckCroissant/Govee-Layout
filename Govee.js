@@ -258,17 +258,17 @@ const GoveeDeviceLibrary = {
 		subdevices: [
 			{
 				name: "Flow Plus Light Bar",
-				ledCount: 8,
-				size: [1, 8],
-				ledNames: ["Led 1", "Led 2", "Led 3", "Led 4", "Led 5", "Led 6", "Led 7", "Led 8"],
-				ledPositions: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7]],
+				ledCount: 6,
+				size: [1, 6],
+				ledNames: ["Led 1", "Led 2", "Led 3", "Led 4", "Led 5", "Led 6"],
+				ledPositions: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5]],
 			},
 			{
 				name: "Flow Plus Light Bar",
-				ledCount: 8,
-				size: [1, 8],
-				ledNames: ["Led 1", "Led 2", "Led 3", "Led 4", "Led 5", "Led 6", "Led 7", "Led 8"],
-				ledPositions: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7]],
+				ledCount: 6,
+				size: [1, 6],
+				ledNames: ["Led 1", "Led 2", "Led 3", "Led 4", "Led 5", "Led 6"],
+				ledPositions: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5]],
 			},
 		]
 	},
