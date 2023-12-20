@@ -277,9 +277,26 @@ const GoveeDeviceLibrary = {
 		imageUrl: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/456da607c09aec3228f9cf8ae36d72d2-pic_h6046.png",
 		sku: "H6046",
 		state: 1,
-		supportRazer: false,
-		supportFeast: false,
-		ledCount: 1
+		supportRazer: true,
+		supportFeast: true,
+		ledCount: 0,
+		usesSubDevices: true,
+		subdevices: [
+			{
+				name: "RGBIC TV Light Bars",
+				ledCount: 10,
+				size: [1, 10],
+				ledNames: ["Led 1", "Led 2", "Led 3", "Led 4", "Led 5", "Led 6", "Led 7", "Led 8", "Led 9", "Led 10"],
+				ledPositions: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [0, 8], [0, 9]],
+			},
+			{
+				name: "RGBIC TV Light Bars",
+				ledCount: 10,
+				size: [1, 10],
+				ledNames: ["Led 1", "Led 2", "Led 3", "Led 4", "Led 5", "Led 6", "Led 7", "Led 8", "Led 9", "Led 10"],
+				ledPositions: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [0, 8], [0, 9]],
+			},
+		]
 	},
 	H6047: {
 		productName: "RGBIC Gaming Light Bars",
