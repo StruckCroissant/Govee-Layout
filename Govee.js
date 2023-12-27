@@ -134,7 +134,12 @@ function SetLedCount(count){
 	ledCount = count;
 
 	CreateLedMap();
-	device.setSize([ledCount, 1]);
+	if (controller.sku == "H619B"){
+		device.setSize([7, 9]);
+	}
+	else {
+		device.setSize([ledCount, 1]);
+	}
 	device.setControllableLeds(ledNames, ledPositions);
 }
 
@@ -393,7 +398,6 @@ const GoveeDeviceLibrary = {
 		state: 1,
 		supportRazer: true,
 		supportFeast: true,
-		size: [6, 9],
 		ledCount: 30
 	},
 	H619C: {
