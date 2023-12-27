@@ -369,7 +369,10 @@ const GoveeDeviceLibrary = {
 		state: 1,
 		supportRazer: true,
 		supportFeast: true,
-		ledCount: 15
+		ledCount: 30,
+		size: [6, 9],
+		ledNames: ["Led 1", "Led 2", "Led 3", "Led 4", "Led 5", "Led 6", "Led 7", "Led 8"],
+		ledPositions: [[3,0], [3,1], [3,2], [3,3], [3,4], [3,5], [4,5], [5,5], [6,5], [6,6], [6,7], [6,8], [5,8], [4,8], [3,8], [2,8], [1,8], [1,8], [1,7], [1,6], [1,6], [1,5], [1,4], [1,4], [1,3], [1,2], [1,1], [1,0], [2,0], [3,0],]
 	},
 	H619C: {
 		productName: "10m RGBIC Pro Strip Lights",
