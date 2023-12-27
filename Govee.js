@@ -653,7 +653,7 @@ const GoveeDeviceLibrary = {
 		sku: "H70B1",
 		state: 1,
 		supportRazer: true,
-		supportFeast: false,
+		supportFeast: true,
 		ledCount: 546
 	}
 };
