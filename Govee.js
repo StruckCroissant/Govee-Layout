@@ -139,19 +139,12 @@ function SetLedCount(count){
 }
 
 function CreateLedMap(){
-	let ledNames = [];
-	let ledPositions = [];
-	if (controller.sku === "H961B") {
-		ledNames = [];
-		ledPositions = [[3,0], [3,1], [3,2], [3,3], [3,4], [3,5], [4,5], [5,5], [6,5], [6,6], [6,7], [6,8], [5,8], [4,8], [3,8], [2,8], [1,8], [1,8], [1,7], [1,6], [1,6], [1,5], [1,4], [1,4], [1,3], [1,2], [1,1], [1,0], [2,0], [3,0]];
-		for(let i = 0; i < ledCount; i++){
-			ledNames.push(`Led ${i + 1}`);
-		}
-	} else {
-		for(let i = 0; i < ledCount; i++){
-			ledNames.push(`Led ${i + 1}`);
-			ledPositions.push([i, 0]);
-		}
+	ledNames = [];
+	ledPositions = [];
+
+	for(let i = 0; i < ledCount; i++){
+		ledNames.push(`Led ${i + 1}`);
+		ledPositions.push([i, 0]);
 	}
 }
 
@@ -393,7 +386,7 @@ const GoveeDeviceLibrary = {
 		state: 1,
 		supportRazer: true,
 		supportFeast: true,
-		ledCount: 30
+		ledCount: 15
 	},
 	H619C: {
 		productName: "10m RGBIC Pro Strip Lights",
