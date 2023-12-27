@@ -135,7 +135,7 @@ function SetLedCount(count){
 
 	CreateLedMap();
 	if (controller.sku == "H70B1"){
-		device.setSize([21, 26]);
+		device.setSize([40, 40]);
 	}
 	else {
 		if (controller.sku == "H619B"){
