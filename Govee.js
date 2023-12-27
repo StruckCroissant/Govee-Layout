@@ -654,7 +654,8 @@ const GoveeDeviceLibrary = {
 		state: 1,
 		supportRazer: true,
 		supportFeast: true,
-		ledCount: 78
+		ledCount: 78,
+		hasVariableLedCount: true
 	}
 };
 
