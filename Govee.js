@@ -48,7 +48,7 @@ export function Initialize(){
 		device.setName(`Govee ${GoveeDeviceInfo.productName}`);
 
 		if(GoveeDeviceInfo.hasVariableLedCount){
-			device.addProperty({"property": "variableLedCount", label: "Segment Count", "type": "number", "min": 1, "max": 60, default: GoveeDeviceInfo.ledCount, step: 1});
+			device.addProperty({"property": "variableLedCount", label: "Segment Count", "type": "number", "min": 1, "max": 600, default: GoveeDeviceInfo.ledCount, step: 1});
 			SetLedCount(variableLedCount);
 		}else{
 			SetLedCount(GoveeDeviceInfo.ledCount);
