@@ -393,6 +393,7 @@ const GoveeDeviceLibrary = {
 		state: 1,
 		supportRazer: true,
 		supportFeast: true,
+		size: [6, 9],
 		ledCount: 30
 	},
 	H619C: {
