@@ -449,7 +449,7 @@ const GoveeDeviceLibrary = {
 		state: 1,
 		supportRazer: true,
 		supportFeast: false,
-		ledCount: 16
+		ledCount: 4
 	},
 	H61E0: {
 		productName: "LED Strip Light M1",
