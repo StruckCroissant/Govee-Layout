@@ -621,6 +621,15 @@ const GoveeDeviceLibrary = {
 		supportRazer: false,
 		supportFeast: false,
 		ledCount: 1
+	},
+	H70B1: {
+		productName: "Curtain Lights",
+		imageUrl: "https://d1f2504ijhdyjw.cloudfront.net/posting-img/db7c2bd49b5dc177a4010f773f7e1e32-70b1%E5%8C%85%E8%A3%85.png",
+		sku: "H70B1",
+		state: 1,
+		supportRazer: true,
+		supportFeast: true,
+		ledCount: 10
 	}
 };
 
