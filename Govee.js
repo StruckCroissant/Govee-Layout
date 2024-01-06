@@ -510,9 +510,9 @@ const GoveeDeviceLibrary = {
 		imageUrl: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/453fc13d798f23c94feda52834f73813-pic_h618c.png",
 		sku: "H618C",
 		state: 1,
-		supportRazer: false,
-		supportFeast: false,
-		ledCount: 1
+		supportRazer: true,
+		supportFeast: true,
+		ledCount: 15
 	},
 	H618E: {
 		productName: "2*10m RGBIC Bassic Strip Lights",
