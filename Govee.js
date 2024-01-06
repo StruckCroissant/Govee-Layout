@@ -219,6 +219,15 @@ const GoveeDeviceLibrary = {
 		supportFeast: true,
 		ledCount: 15
 	},
+	H6609: {
+		productName: "Gaming Light Strip G1",
+		imageUrl: "",
+		sku: "H6609",
+		state: 1,
+		supportrazer: true,
+		supportFeast: true,
+		ledCount: 10
+	},
 	H610A: {
 		productName: "Glide Lively Wall Light",
 		imageUrl: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/de6825d1888767fba52136e98c5c1d84-pic_h610a.png",
