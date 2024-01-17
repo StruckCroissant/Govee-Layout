@@ -886,6 +886,7 @@ class GoveeProtocol {
 				}
 			});
 			this.lastPacket = now;
+			govee.SetRazerMode(true);
 		}
 
 		const ret = udp.send(this.ip, this.port, JSON.stringify({
