@@ -352,6 +352,15 @@ const GoveeDeviceLibrary = {
 		supportFeast: true,
 		ledCount: 15
 	},
+	H7053: {
+		productName: "Outdoor Ground Lights 2",
+		imageUrl: "",
+		sku: "H7053",
+		state: 1,
+		supportRazer: false,
+		supportFeast: true,
+		ledCount: 30
+	},
 	H61A1: {
 		productName: "2m RGBIC Neon Rope Lights",
 		imageUrl: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/4677148fa9b2569a2bc199a999e079fc-pic_h61a1.png",
