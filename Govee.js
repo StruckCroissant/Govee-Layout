@@ -1,3 +1,4 @@
+import udp from "@SignalRGB/udp";
 export function Name() { return "Govee"; }
 export function Version() { return "1.0.0"; }
 export function Type() { return "network"; }
@@ -10,11 +11,14 @@ controller:readonly
 discovery: readonly
 TurnOffOnShutdown:readonly
 variableLedCount:readonly
+LightingMode:readonly
+forcedColor:readonly
 */
 export function ControllableParameters() {
 	return [
-		//{"property":"AutoStartStream", "group":"settings", "label":"Automatically Start Stream", "type":"boolean", "default":"false"},
 		{"property":"TurnOffOnShutdown", "group":"settings", "label":"Turn off on App Exit", "type":"boolean", "default":"false"},
+		{"property":"LightingMode", "group":"lighting", "label":"Lighting Mode", "type":"combobox", "values":["Canvas", "Forced"], "default":"Canvas"},
+		{"property":"forcedColor", "group":"lighting", "label":"Forced Color", "min":"0", "max":"360", "type":"color", "default":"#009bde"},
 	];
 }
 
@@ -27,22 +31,104 @@ let ledNames = [];
 let ledPositions = [];
 let subdevices = [];
 
+export function Initialize(){
+	device.addFeature("base64");
+
+	device.setName(controller.sku);
+	device.setImageFromUrl(controller.deviceImage);
+
+	if(UDPServer !== undefined) {
+		UDPServer.stop();
+		UDPServer = undefined;
+	}
+	//Make sure we don't have a server floating around still.
+
+	UDPServer = new UdpSocketServer({
+		ip : controller.ip,
+		broadcastPort : 4003,
+		listenPort : 4002
+	});
+
+	UDPServer.start();
+	//Establish a new udp server. This is now required for using udp.send.
+
+	ClearSubdevices();
+	fetchDeviceInfoFromTableAndConfigure();
+
+	govee = new GoveeProtocol(controller.ip, controller.supportDreamView, controller.supportRazer);
+	// This is what happens in my wireshark
+	govee.setDeviceState(true);
+	govee.SetRazerMode(true);
+	govee.SetRazerMode(true);
+	govee.setDeviceState(true);
+}
+
+export function Render(){
+	const RGBData = subdevices.length > 0 ? GetRGBFromSubdevices() : GetDeviceRGB();
+
+	govee.SendRGB(RGBData);
+	device.pause(10);
+}
+
+export function Shutdown(suspend){
+	govee.SetRazerMode(false);
+
+	if(TurnOffOnShutdown){
+		govee.setDeviceState(false);
+	}
+}
+
 export function onvariableLedCountChanged(){
 	SetLedCount(variableLedCount);
 }
 
+function GetRGBFromSubdevices(){
+	const RGBData = [];
 
-export function Initialize(){
-	device.addFeature("udp");
-	device.addFeature("base64");
+	for(const subdevice of subdevices){
+		const ledPositions = subdevice.ledPositions;
 
-	device.log(JSON.stringify(controller));
-	device.log(controller.ip);
-	device.log(controller.sku);
-	device.setName(controller.sku);
+		for(let i = 0 ; i < ledPositions.length; i++){
+			const ledPosition = ledPositions[i];
+			let color;
 
-	ClearSubdevices();
+			if (LightingMode === "Forced") {
+				color = hexToRgb(forcedColor);
+			} else {
+				color = device.subdeviceColor(subdevice.id, ledPosition[0], ledPosition[1]);
+			}
 
+			RGBData[i * 3] = color[0];
+			RGBData[i * 3 + 1] = color[1];
+			RGBData[i * 3 + 2] = color[2];
+		}
+	}
+
+	return RGBData;
+}
+
+function GetDeviceRGB(){
+	const RGBData = new Array(ledCount * 3);
+
+	for(let i = 0 ; i < ledPositions.length; i++){
+		const ledPosition = ledPositions[i];
+		let color;
+
+		if (LightingMode === "Forced") {
+			color = hexToRgb(forcedColor);
+		} else {
+			color = device.color(ledPosition[0], ledPosition[1]);
+		}
+
+		RGBData[i * 3] = color[0];
+		RGBData[i * 3 + 1] = color[1];
+		RGBData[i * 3 + 2] = color[2];
+	}
+
+	return RGBData;
+}
+
+function fetchDeviceInfoFromTableAndConfigure() {
 	if(GoveeDeviceLibrary.hasOwnProperty(controller.sku)){
 		const GoveeDeviceInfo = GoveeDeviceLibrary[controller.sku];
 		device.setName(`Govee ${GoveeDeviceInfo.productName}`);
@@ -70,64 +156,6 @@ export function Initialize(){
 		device.setName(`Govee: ${controller.sku}`);
 		SetLedCount(20);
 	}
-
-
-	govee = new GoveeProtocol(controller.ip, controller.supportDreamView, controller.supportRazer);
-	// This is what happens in my wireshark
-	govee.setDeviceState(true);
-	govee.SetRazerMode(true);
-	govee.SetRazerMode(true);
-	govee.setDeviceState(true);
-}
-
-
-export function Render(){
-	const RGBData = subdevices.length > 0 ? GetRGBFromSubdevices() : GetDeviceRGB();
-
-	govee.SendRGB(RGBData);
-	device.pause(10);
-}
-
-export function Shutdown(suspend){
-	govee.SetRazerMode(false);
-
-	if(TurnOffOnShutdown){
-		govee.setDeviceState(false);
-	}
-}
-
-function GetRGBFromSubdevices(){
-	const RGBData = [];
-
-	for(const subdevice of subdevices){
-		const ledPositions = subdevice.ledPositions;
-
-		for(let i = 0 ; i < ledPositions.length; i++){
-			const ledPosition = ledPositions[i];
-
-			const color = device.subdeviceColor(subdevice.id, ledPosition[0], ledPosition[1]);
-			RGBData.push(color[0]);
-			RGBData.push(color[1]);
-			RGBData.push(color[2]);
-		}
-	}
-
-	return RGBData;
-}
-
-function GetDeviceRGB(){
-	const RGBData = new Array(ledCount * 3);
-
-	for(let i = 0 ; i < ledPositions.length; i++){
-		const ledPosition = ledPositions[i];
-
-		const color = device.color(ledPosition[0], ledPosition[1]);
-		RGBData[i * 3] = color[0];
-		RGBData[i * 3 + 1] = color[1];
-		RGBData[i * 3 + 2] = color[2];
-	}
-
-	return RGBData;
 }
 
 function SetLedCount(count){
@@ -170,7 +198,513 @@ function CreateSubDevice(subdevice){
 	subdevices.push(subdevice);
 }
 
-/** @typedef { {productName: string, imageUrl: string, sku: string, state: number, supportRazer: boolean, supportFeast: boolean, ledCount: number, hasVariableLedCount?: boolean} } GoveeDevice */
+function hexToRgb(hex) {
+	const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+	const colors = [];
+	colors[0] = parseInt(result[1], 16);
+	colors[1] = parseInt(result[2], 16);
+	colors[2] = parseInt(result[3], 16);
+
+	return colors;
+}
+
+let UDPServer;
+
+export function DiscoveryService() {
+	this.IconUrl = "https://assets.signalrgb.com/brands/products/govee_ble/icon@2x.png";
+	this.firstRun = true;
+
+	this.Initialize = function(){
+		service.log("Searching for Govee network devices...");
+		this.LoadCachedDevices();
+	};
+
+	this.UdpBroadcastPort = 4001;
+	this.UdpListenPort = 4002;
+	this.UdpBroadcastAddress = "239.255.255.250";
+
+	this.lastPollTime = 0;
+	this.PollInterval = 60000;
+
+	this.cache = new IPCache();
+
+	this.LoadCachedDevices = function(){
+		service.log("Loading Cached Devices...");
+
+		for(const [key, value] of this.cache.Entries()){
+			service.log(`Found Cached Device: [${key}: ${JSON.stringify(value)}]`);
+			this.checkCachedDevice(value.ip);
+		}
+	};
+
+	this.checkCachedDevice = function(ipAddress) {
+		service.log(`Checking IP: ${ipAddress}`);
+
+		if(UDPServer !== undefined) {
+			UDPServer.stop();
+			UDPServer = undefined;
+		}
+
+		UDPServer = new UdpSocketServer({
+			ip : ipAddress,
+			isDiscoveryServer : true
+		});
+
+		UDPServer.start();
+	};
+
+	this.forceDiscovery = function(value) {
+		const packetType = JSON.parse(value.response).msg.cmd;
+		service.log(`Type: ${packetType}`);
+
+		if(packetType === "scan"){
+			service.log(`New host discovered!`);
+			service.log(value);
+			this.CreateControllerDevice(value);
+		}
+	};
+
+	this.purgeIPCache = function() {
+		this.cache.PurgeCache();
+	};
+
+	this.CheckForDevices = function(){
+		if(Date.now() - discovery.lastPollTime < discovery.PollInterval){
+			return;
+		}
+
+		discovery.lastPollTime = Date.now();
+		service.log("Broadcasting device scan...");
+		service.broadcast(JSON.stringify({
+			msg: {
+				cmd: "scan",
+				data: {
+					account_topic: "reserve",
+				},
+			}
+		}));
+	};
+
+	this.Update = function(){
+		for(const cont of service.controllers){
+			cont.obj.update();
+		}
+
+		this.CheckForDevices();
+	};
+
+	this.Shutdown = function(){
+
+	};
+
+	this.Discovered = function(value) {
+
+		const packetType = JSON.parse(value.response).msg.cmd;
+		service.log(`Type: ${packetType}`);
+
+		if(packetType === "scan"){
+			service.log(`New host discovered!`);
+			service.log(value);
+			this.CreateControllerDevice(value);
+		}
+	};
+
+	this.Removal = function(value){
+
+	};
+
+	this.CreateControllerDevice = function(value){
+		const controller = service.getController(value.id);
+
+		if (controller === undefined) {
+			service.addController(new GoveeController(value));
+		} else {
+			controller.updateWithValue(value);
+		}
+	};
+}
+
+class GoveeController{
+	constructor(value){
+		this.id = value.id;
+		this.port = value.port;
+
+		const packet = JSON.parse(value.response).msg;
+		const response = packet.data;
+		const type = packet.cmd;
+		service.log(`Type: ${type}`);
+
+		service.log(response);
+
+		this.ip = response.ip;
+		this.name = response.sku;
+
+		if(GoveeDeviceLibrary.hasOwnProperty(response.sku)){
+			const GoveeDeviceInfo = GoveeDeviceLibrary[response.sku];
+			this.name = GoveeDeviceInfo?.productName;
+			this.supportDreamView = GoveeDeviceInfo?.supportFeast;
+			this.supportRazer = GoveeDeviceInfo?.supportRazer;
+			this.deviceImage = GoveeDeviceInfo?.imageUrl;
+		}
+
+		this.device = response.device;
+		this.sku = response.sku;
+		this.bleVersionHard = response.bleVersionHard;
+		this.bleVersionSoft = response.bleVersionSoft;
+		this.wifiVersionHard = response.wifiVersionHard;
+		this.wifiVersionSoft = response.wifiVersionSoft;
+		this.initialized = false;
+
+		this.DumpControllerInfo();
+		this.cacheControllerInfo(this);
+	}
+
+	DumpControllerInfo(){
+		service.log(`id: ${this.id}`);
+		service.log(`port: ${this.port}`);
+		service.log(`ip: ${this.ip}`);
+		service.log(`device: ${this.device}`);
+		service.log(`sku: ${this.sku}`);
+		service.log(`bleVersionHard: ${this.bleVersionHard}`);
+		service.log(`bleVersionSoft: ${this.bleVersionSoft}`);
+		service.log(`wifiVersionHard: ${this.wifiVersionHard}`);
+		service.log(`wifiVersionSoft: ${this.wifiVersionSoft}`);
+		service.log(`Supports Razer: ${this.supportRazer ? 'yes': 'no'}`);
+		service.log(`Supports DreamView: ${this.supportDreamView ? 'yes': 'no'}`);
+	}
+
+	updateWithValue(value){
+		this.id = value.id;
+		this.port = value.port;
+
+		const response = JSON.parse(value.response).msg.data;
+
+		this.ip = response.ip;
+		this.device = response.device;
+		this.sku = response.sku;
+		this.bleVersionHard = response.bleVersionHard;
+		this.bleVersionSoft = response.bleVersionSoft;
+		this.wifiVersionHard = response.wifiVersionHard;
+		this.wifiVersionSoft = response.wifiVersionSoft;
+
+		service.updateController(this);
+	}
+
+	update(){
+		if(!this.initialized){
+			this.initialized = true;
+			service.updateController(this);
+			service.announceController(this);
+		}
+	}
+
+	cacheControllerInfo(value){
+		discovery.cache.Add(value.id, {
+			name: value.name,
+			port: value.port,
+			ip: value.ip,
+			id: value.id
+		});
+	}
+}
+
+
+class GoveeProtocol {
+
+	constructor(ip, supportDreamView, supportRazer){
+		this.ip = ip;
+		this.port = 4003;
+		this.lastPacket = 0;
+		this.supportDreamView = supportDreamView;
+		this.supportRazer = supportRazer;
+	}
+
+	setDeviceState(on){
+		UDPServer.send(JSON.stringify({
+			"msg": {
+				"cmd": "turn",
+				"data": {
+					"value": on ? 1 : 0
+				}
+			}
+		}));
+	}
+
+	SetBrightness(value) {
+		UDPServer.send(JSON.stringify({
+			"msg": {
+				"cmd":"brightness",
+				"data": {
+					"value":value
+				}
+			}
+		}));
+	}
+
+	SetRazerMode(enable){
+		UDPServer.send(JSON.stringify({msg:{cmd:"razer", data:{pt:enable?"uwABsQEK":"uwABsQAL"}}}));
+	}
+
+	calculateXorChecksum(packet) {
+		let checksum = 0;
+
+		for (let i = 0; i < packet.length; i++) {
+		  checksum ^= packet[i];
+		}
+
+		return checksum;
+	}
+
+	createDreamViewPacket(colors) {
+		// Define the Dreamview protocol header
+		const header = [0xBB, 0x00, 0x20, 0xB0, 0x01, colors.length / 3];
+		const fullPacket = header.concat(colors);
+		const checksum = this.calculateXorChecksum(fullPacket);
+		fullPacket.push(checksum);
+
+		return fullPacket;
+	}
+
+	createRazerPacket(colors) {
+		// Define the Razer protocol header
+		const header = [0xBB, 0x00, 0x0E, 0xB0, 0x01, colors.length / 3];
+		const fullPacket = header.concat(colors);
+		fullPacket.push(0); // Checksum
+
+		return fullPacket;
+	}
+
+	SetStaticColor(RGBData){
+		UDPServer.send(JSON.stringify({
+			msg: {
+				cmd: "colorwc",
+				data: {
+					color: {r: RGBData[0], g: RGBData[1], b: RGBData[2]},
+					colorTemInKelvin: 0
+				}
+			}
+		}));
+		device.pause(100);
+	}
+
+	SendEncodedPacket(packet){
+		const command = base64.Encode(packet);
+
+		const now = Date.now();
+
+		if (now - this.lastPacket > 1000) {
+			UDPServer.send(JSON.stringify({
+				msg: {
+					cmd: "status",
+					data: {}
+				}
+			}));
+			this.lastPacket = now;
+		}
+
+		UDPServer.send(JSON.stringify({
+			msg: {
+				cmd: "razer",
+				data: {
+					pt: command,
+				},
+			},
+		}));
+	}
+
+	SendRGB(RGBData) {
+
+		if (this.supportDreamView) {
+			const packet = this.createDreamViewPacket(RGBData);
+			this.SendEncodedPacket(packet);
+		} else if(this.supportRazer) {
+			const packet = this.createRazerPacket(RGBData);
+			this.SendEncodedPacket(packet);
+		} else{
+			this.SetStaticColor(RGBData.slice(0, 3));
+		}
+	}
+}
+
+class UdpSocketServer{
+	constructor (args) {
+		this.count = 0;
+		/** @type {udpSocket | null} */
+		this.server = null;
+		this.listenPort = args?.listenPort ?? 4002;
+		this.broadcastPort = args?.broadcastPort ?? 4001;
+		this.ipToConnectTo = args?.ip ?? "239.255.255.250";
+		this.isDiscoveryServer = args?.isDiscoveryServer ?? false;
+	}
+
+	write(packet, address, port) {
+		if(!this.server) {
+			this.server = udp.createSocket();
+		}
+
+		this.server.write(packet, address, port);
+	}
+
+	send(packet) {
+		if(!this.server) {
+			this.server = udp.createSocket();
+			device.log("Defining new UDP Socket so we can send data.");
+		}
+
+		this.server.send(packet);
+	}
+
+	start(){
+		this.server = udp.createSocket();
+
+		if(this.server){
+
+			// Given we're passing class methods to the server, we need to bind the context (this instance) to the function pointer
+			this.server.on('error', this.onError.bind(this));
+			this.server.on('message', this.onMessage.bind(this));
+			this.server.on('listening', this.onListening.bind(this));
+			this.server.on('connection', this.onConnection.bind(this));
+			this.server.bind(this.listenPort);
+			this.server.connect(this.ipToConnectTo, this.broadcastPort);
+
+		}
+	};
+
+	stop(){
+		if(this.server) {
+			this.server.disconnect();
+			this.server.close();
+		}
+	}
+
+	onConnection(){
+		service.log('Connected to remote socket!');
+		service.log("Remote Address:");
+		service.log(this.server.remoteAddress(), {pretty: true});
+		service.log("Sending Check to socket");
+
+		const bytesWritten = this.server.send(JSON.stringify({
+			msg: {
+				cmd: "scan",
+				data: {
+					account_topic: "reserve",
+				},
+			}
+		}));
+
+		if(bytesWritten === -1){
+			service.log('Error sending data to remote socket');
+		}
+	};
+
+	onListenerResponse(msg) {
+		service.log('Data received from client');
+		service.log(msg, {pretty: true});
+	}
+
+	onListening(){
+		const address = this.server.address();
+		service.log(`Server is listening at port ${address.port}`);
+
+		// Check if the socket is bound (no error means it's bound but we'll check anyway)
+		service.log(`Socket Bound: ${this.server.state === this.server.BoundState}`);
+	};
+	onMessage(msg){
+		service.log('Data received from client');
+		service.log(msg, {pretty: true});
+
+		if(this.isDiscoveryServer) {
+			discovery.forceDiscovery(msg);
+		}
+	};
+	onError(code, message){
+		service.log(`Error: ${code} - ${message}`);
+		//this.server.close(); // We're done here
+	};
+}
+
+class IPCache{
+	constructor(){
+		this.cacheMap = new Map();
+		this.persistanceId = "ipCache";
+		this.persistanceKey = "cache";
+
+		this.PopulateCacheFromStorage();
+	}
+	Add(key, value){
+		if(!this.cacheMap.has(key)) {
+			service.log(`Adding ${key} to IP Cache...`);
+
+			this.cacheMap.set(key, value);
+			this.Persist();
+		}
+	}
+
+	Remove(key){
+		this.cacheMap.delete(key);
+		this.Persist();
+	}
+	Has(key){
+		return this.cacheMap.has(key);
+	}
+	Get(key){
+		return this.cacheMap.get(key);
+	}
+	Entries(){
+		return this.cacheMap.entries();
+	}
+
+	PurgeCache() {
+		service.removeSetting(this.persistanceId, this.persistanceKey);
+		service.log("Purging IP Cache from storage!");
+	}
+
+	PopulateCacheFromStorage(){
+		service.log("Populating IP Cache from storage...");
+
+		const storage = service.getSetting(this.persistanceId, this.persistanceKey);
+
+		if(storage === undefined){
+			service.log(`IP Cache is empty...`);
+
+			return;
+		}
+
+		let mapValues;
+
+		try{
+			mapValues = JSON.parse(storage);
+		}catch(e){
+			service.log(e);
+		}
+
+		if(mapValues === undefined){
+			service.log("Failed to load cache from storage! Cache is invalid!");
+
+			return;
+		}
+
+		if(mapValues.length === 0){
+			service.log(`IP Cache is empty...`);
+		}
+
+		this.cacheMap = new Map(mapValues);
+	}
+
+	Persist(){
+		service.log("Saving IP Cache...");
+		service.saveSetting(this.persistanceId, this.persistanceKey, JSON.stringify(Array.from(this.cacheMap.entries())));
+	}
+
+	DumpCache(){
+		for(const [key, value] of this.cacheMap.entries()){
+			service.log([key, value]);
+		}
+	}
+}
+
+// eslint-disable-next-line max-len
+/** @typedef { {productName: string, imageUrl: string, sku: string, state: number, supportRazer: boolean, supportFeast: boolean, ledCount: number, hasVariableLedCount?: boolean } } GoveeDevice */
 /** @type {Object.<string, GoveeDevice>} */
 const GoveeDeviceLibrary = {
 	H6061: {
@@ -224,7 +758,7 @@ const GoveeDeviceLibrary = {
 		imageUrl: "",
 		sku: "H6609",
 		state: 1,
-		supportrazer: true,
+		supportRazer: true,
 		supportFeast: true,
 		ledCount: 10
 	},
@@ -641,273 +1175,3 @@ const GoveeDeviceLibrary = {
 		ledCount: 10
 	}
 };
-
-export function DiscoveryService() {
-	//this.IconUrl = "";
-	this.firstRun = true;
-
-	this.Initialize = function(){
-		service.log("Initializing Plugin!");
-		service.log("Searching for network devices...");
-	};
-
-	this.UdpBroadcastPort = 4001;
-	this.UdpBroadcastAddress = "239.255.255.250";
-	this.UdpListenPort = 4002;
-
-	this.lastPollTime = 0;
-	this.PollInterval = 60000;
-
-	this.CheckForDevices = function(){
-		if(Date.now() - discovery.lastPollTime < discovery.PollInterval){
-			return;
-		}
-
-		discovery.lastPollTime = Date.now();
-		service.log("Broadcasting device scan...");
-		service.broadcast(JSON.stringify({
-			msg: {
-				cmd: "scan",
-				data: {
-					account_topic: "reserve",
-				},
-			}
-		}));
-	};
-
-	this.Update = function(){
-		for(const cont of service.controllers){
-			cont.obj.update();
-		}
-
-		this.CheckForDevices();
-	};
-
-	this.Shutdown = function(){
-
-	};
-
-	this.Discovered = function(value) {
-
-		const packetType = JSON.parse(value.response).msg.cmd;
-		service.log(`Type: ${packetType}`);
-
-		if(packetType === "scan"){
-			service.log(`New host discovered!`);
-			service.log(value);
-			this.CreateControllerDevice(value);
-		}
-	};
-
-	this.Removal = function(value){
-
-	};
-
-	this.CreateControllerDevice = function(value){
-		const controller = service.getController(value.id);
-
-		if (controller === undefined) {
-			service.addController(new GoveeController(value));
-		} else {
-			controller.updateWithValue(value);
-		}
-	};
-}
-
-class GoveeController{
-	constructor(value){
-		this.id = value.id;
-		this.port = value.port;
-
-		const packet = JSON.parse(value.response).msg;
-		const response = packet.data;
-		const type = packet.cmd;
-		service.log(`Type: ${type}`);
-
-		service.log(response);
-
-		this.ip = response.ip;
-		this.name = response.sku;
-
-		if(GoveeDeviceLibrary.hasOwnProperty(response.sku)){
-			const GoveeDeviceInfo = GoveeDeviceLibrary[response.sku];
-			this.name = GoveeDeviceInfo.productName;
-			this.supportDreamView = GoveeDeviceInfo.supportFeast;
-			this.supportRazer = GoveeDeviceInfo.supportRazer;
-		}
-
-		this.device = response.device;
-		this.sku = response.sku;
-		this.bleVersionHard = response.bleVersionHard;
-		this.bleVersionSoft = response.bleVersionSoft;
-		this.wifiVersionHard = response.wifiVersionHard;
-		this.wifiVersionSoft = response.wifiVersionSoft;
-		this.initialized = false;
-
-		this.DumpControllerInfo();
-	}
-
-	DumpControllerInfo(){
-		service.log(`id: ${this.id}`);
-		service.log(`port: ${this.port}`);
-		service.log(`ip: ${this.ip}`);
-		service.log(`device: ${this.device}`);
-		service.log(`sku: ${this.sku}`);
-		service.log(`bleVersionHard: ${this.bleVersionHard}`);
-		service.log(`bleVersionSoft: ${this.bleVersionSoft}`);
-		service.log(`wifiVersionHard: ${this.wifiVersionHard}`);
-		service.log(`wifiVersionSoft: ${this.wifiVersionSoft}`);
-		service.log(`Supports Razer: ${this.supportRazer ? 'yes': 'no'}`);
-		service.log(`Supports DreamView: ${this.supportDreamView ? 'yes': 'no'}`);
-	}
-
-	updateWithValue(value){
-		this.id = value.id;
-		this.port = value.port;
-
-		const response = JSON.parse(value.response).msg.data;
-
-		this.ip = response.ip;
-		this.device = response.device;
-		this.sku = response.sku;
-		this.bleVersionHard = response.bleVersionHard;
-		this.bleVersionSoft = response.bleVersionSoft;
-		this.wifiVersionHard = response.wifiVersionHard;
-		this.wifiVersionSoft = response.wifiVersionSoft;
-
-		service.updateController(this);
-	}
-
-	update(){
-		if(!this.initialized){
-			this.initialized = true;
-			service.updateController(this);
-			service.announceController(this);
-		}
-	}
-}
-
-
-class GoveeProtocol {
-
-	constructor(ip, supportDreamView, supportRazer){
-		this.ip = ip;
-		this.port = 4003;
-		this.lastPacket = 0;
-		this.supportDreamView = supportDreamView;
-		this.supportRazer = supportRazer;
-	}
-
-	static EncodeBase64(string){
-		return string.toString('base64');
-	}
-
-	setDeviceState(on){
-		udp.send(this.ip, this.port, {
-			"msg": {
-				"cmd": "turn",
-				"data": {
-					"value": on ? 1 : 0
-				}
-			}
-		});
-	}
-
-	SetBrightness(value) {
-		udp.send(this.ip, this.port, {
-			"msg": {
-				"cmd":"brightness",
-				"data": {
-					"value":value
-				}
-			}
-		});
-	}
-
-	SetRazerMode(enable){
-		const command = base64.Encode([0xBB, 0x00, 0x01, 0xB1, 0x00, enable ? 0x0A : 0x0B, 0x00]); // disable
-		device.log("Sending razer command");
-		udp.send(this.ip, this.port, {msg:{cmd:"razer", data:{pt:enable?"uwABsQEK":"uwABsQAL"}}});
-	}
-
-	calculateXorChecksum(packet) {
-		let checksum = 0;
-
-		for (let i = 0; i < packet.length; i++) {
-		  checksum ^= packet[i];
-		}
-
-		return checksum;
-	}
-
-	createDreamViewPacket(colors) {
-		// Define the Dreamview protocol header
-		const header = [0xBB, 0x00, 0x20, 0xB0, 0x01, colors.length / 3];
-		const fullPacket = header.concat(colors);
-		const checksum = this.calculateXorChecksum(fullPacket);
-		fullPacket.push(checksum);
-
-		return fullPacket;
-	}
-
-	createRazerPacket(colors) {
-		// Define the Razer protocol header
-		const header = [0xBB, 0x00, 0x0E, 0xB0, 0x01, colors.length / 3];
-		const fullPacket = header.concat(colors);
-		fullPacket.push(0); // Checksum
-
-		return fullPacket;
-	}
-
-	SetStaticColor(RGBData){
-		udp.send(this.ip, this.port, {
-			msg: {
-				cmd: "colorwc",
-				data: {
-					color: {r: RGBData[0], g: RGBData[1], b: RGBData[2]},
-					colorTemInKelvin: 0
-				}
-			}
-		});
-		device.pause(100);
-	}
-
-	SendEncodedPacket(packet){
-		const command = base64.Encode(packet);
-
-		const now = Date.now();
-
-		if (now - this.lastPacket > 1000) {
-			//device.log('Sending alive status');
-			udp.send(this.ip, this.port, {
-				msg: {
-					cmd: "status",
-					data: {}
-				}
-			});
-			this.lastPacket = now;
-		}
-
-		const ret = udp.send(this.ip, this.port, JSON.stringify({
-			msg: {
-				cmd: "razer",
-				data: {
-					pt: command,
-				},
-			},
-		}));
-	}
-
-	SendRGB(RGBData) {
-
-		if (this.supportDreamView) {
-			const packet = this.createDreamViewPacket(RGBData);
-			this.SendEncodedPacket(packet);
-		} else if(this.supportRazer) {
-			const packet = this.createRazerPacket(RGBData);
-			this.SendEncodedPacket(packet);
-		} else{
-			this.SetStaticColor(RGBData.slice(0, 3));
-		}
-	}
-}
