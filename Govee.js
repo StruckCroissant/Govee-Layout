@@ -180,7 +180,7 @@ const GoveeDeviceLibrary = {
 		state: 1,
 		supportRazer: true,
 		supportFeast: true,
-		ledCount: 15
+		ledCount: 30
 	},
 	H6062: {
 		productName: "Glide Wall Light",
