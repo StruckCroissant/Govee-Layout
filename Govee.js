@@ -227,6 +227,8 @@ export function DiscoveryService() {
 	this.PollInterval = 60000;
 
 	this.cache = new IPCache();
+	this.activeSockets = new Map();
+	this.activeSocketTimer = Date.now();
 
 	this.LoadCachedDevices = function(){
 		service.log("Loading Cached Devices...");
@@ -245,12 +247,27 @@ export function DiscoveryService() {
 			UDPServer = undefined;
 		}
 
-		UDPServer = new UdpSocketServer({
+		const socketServer = new UdpSocketServer({
 			ip : ipAddress,
 			isDiscoveryServer : true
 		});
 
-		UDPServer.start();
+		this.activeSockets.set(ipAddress, socketServer);
+		socketServer.start();
+	};
+
+	this.clearSockets = function() {
+		if(Date.now() - this.activeSocketTimer > 10000 && this.activeSockets.size > 0) {
+			service.log("Nuking Active Cache Sockets.");
+
+			for(const [key, value] of this.activeSockets.entries()){
+				service.log(`Nuking Socket for IP: [${key}]`);
+				value.stop();
+				this.activeSockets.delete(key);
+				//Clear would be more efficient here, however it doesn't kill the socket instantly.
+				//We instead would be at the mercy of the GC.
+			}
+		}
 	};
 
 	this.forceDiscovery = function(value) {
@@ -290,6 +307,7 @@ export function DiscoveryService() {
 			cont.obj.update();
 		}
 
+		this.clearSockets();
 		this.CheckForDevices();
 	};
 
@@ -541,7 +559,7 @@ class UdpSocketServer{
 		this.count = 0;
 		/** @type {udpSocket | null} */
 		this.server = null;
-		this.listenPort = args?.listenPort ?? 4002;
+		this.listenPort = args?.listenPort ?? 0;
 		this.broadcastPort = args?.broadcastPort ?? 4001;
 		this.ipToConnectTo = args?.ip ?? "239.255.255.250";
 		this.isDiscoveryServer = args?.isDiscoveryServer ?? false;

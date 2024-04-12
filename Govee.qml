@@ -31,16 +31,16 @@ Item {
 				anchors.verticalCenter: parent.verticalCenter
 
 				Text{
-					color: theme.secondarytextcolor
+					color: "White"
 					text: "Searching network for Govee Devices..." 
 					font.pixelSize: 14
-					font.family: theme.primaryfont
+					font.family: theme.secondaryfont
 				}
 				Text{
-					color: theme.secondarytextcolor
+					color: "White"
 					text: "This may take several minutes..." 
 					font.pixelSize: 14
-					font.family: theme.primaryfont
+					font.family: theme.secondaryfont
 				}
 
 			}
@@ -96,7 +96,7 @@ Item {
                         label.text: "Clear IP Cache"
 
                         onClicked : {
-                            discovery.purgeIPCache();
+                            cacheBurnBox.visible = true
                         }
                     }
 
@@ -184,6 +184,57 @@ Item {
                     text: `Supports Razer Protocol: ${root.device.supportRazer ? "True" : "False"}`
                 }
             }
+            }
+        }
+    }
+
+    //I'll burn this down once I get a better idea of how to do it.
+    //For now it'll serve its purpose.
+    Rectangle{
+    id: cacheBurnBox
+    height: 200
+	width: 520
+    radius: 8
+    color: theme.background2
+    visible: false
+
+        Text{
+            topPadding: 16
+            anchors.horizontalCenter: parent.horizontalCenter
+
+	    	color: "White"
+	    	text: "Are you sure you want to clear the cache?" 
+	    	font.pixelSize: 24
+	    	font.family: theme.primaryfont
+            wrapMode: Text.Wrap
+	    }
+
+        SButton{
+            width: 132
+            x: 122
+            y: 92
+
+            color: hovered ? Qt.darker(theme.background4, 1.5) : theme.background4
+            label.font.pixelSize: 24
+            label.text: "Go Back"
+
+            onClicked : {
+                cacheBurnBox.visible = false
+            }
+        }
+
+        SButton{
+            width: 132
+            x: 278
+            y: 92
+
+            color: hovered ? Qt.darker("#531B1B", 1.5) : "#531B1B"
+            label.font.pixelSize: 24
+            label.text: "I'm Sure"
+
+            onClicked : {
+                discovery.purgeIPCache();
+                cacheBurnBox.visible = false
             }
         }
     }
