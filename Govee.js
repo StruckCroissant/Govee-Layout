@@ -57,14 +57,12 @@ export function Initialize(){
 
 	govee = new GoveeProtocol(controller.ip, controller.supportDreamView, controller.supportRazer);
 	// This is what happens in my wireshark
+	device.pause(1000);
+	//yes yes thread locks bad.
 	govee.setDeviceState(true);
-	device.pause(10);
 	govee.SetRazerMode(true);
-	device.pause(10);
 	govee.SetRazerMode(true);
-	device.pause(10);
 	govee.setDeviceState(true);
-	device.pause(10);
 
 	UDPServer.send(JSON.stringify({
 		msg: {
@@ -75,16 +73,17 @@ export function Initialize(){
 }
 
 let lastRGBData = [];
+let loopCounter = 0;
 
 export function Render(){
 	const RGBData = subdevices.length > 0 ? GetRGBFromSubdevices() : GetDeviceRGB();
 
-	govee.SendKeepAlive();
-
 	if(!CompareArrays(RGBData, lastRGBData)) {
 		govee.SendRGB(RGBData);
 		lastRGBData = RGBData;
-		device.pause(10);
+		loopCounter++;
+
+		if(loopCounter > 24) {govee.SendKeepAlive(); }
 	}
 }
 
