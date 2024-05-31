@@ -1,46 +1,7 @@
+import QtQuick.Layouts
+
 Item {
     anchors.fill: parent
-
-    Rectangle{
-        anchors{
-            top: parent.top
-            right: parent.right
-        }
-        width: 300
-        height: linkingCol.childrenRect.height + linkingCol.topPadding + linkingCol.bottomPadding
-        color: theme.background3
-        radius: theme.radius
-        Column{
-            id: linkingCol
-            spacing: 5
-            padding: 10
-            width: parent.width
-
-            Label{
-                font{
-                    pixelSize: 16
-                    family: theme.primaryfont
-                    weight: Font.Bold
-                }
-                color: theme.primarytextcolor
-                text: "Linking Instructions"
-            }
-            Label{
-                font{
-                    pixelSize: 14
-                    family: theme.secondarytextcolor
-                }
-                width: parent.width - 20
-                color: theme.secondarytextcolor
-                textFormat: Text.MarkdownText
-                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                text: 
-"* The Device must be on a 2.4ghz WIFI network. \n
-* LAN Control must be enabled within the Govee App."
-            }
-
-        }
-    }
 
     Column{
         width: parent.width
@@ -50,9 +11,9 @@ Item {
 		Rectangle{
 			id: scanningItem
 			height: 50
-			width: childrenRect.width + 15
+			width: 350
 			visible: service.controllers.length === 0
-			color: theme.background3
+			color: theme.background2
 			radius: theme.radius
 
 			BusyIndicator {
@@ -70,119 +31,211 @@ Item {
 				anchors.verticalCenter: parent.verticalCenter
 
 				Text{
-					color: theme.secondarytextcolor
+					color: "White"
 					text: "Searching network for Govee Devices..." 
 					font.pixelSize: 14
-					font.family: "Montserrat"
+					font.family: theme.secondaryfont
 				}
 				Text{
-					color: theme.secondarytextcolor
+					color: "White"
 					text: "This may take several minutes..." 
 					font.pixelSize: 14
-					font.family: "Montserrat"
+					font.family: theme.secondaryfont
 				}
+
 			}
-		}
+		}    
     
+         Pane {
+                width: 352
+                height: 136
+                padding: 8
+
+                background: Rectangle {
+                    color: theme.background2
+                    radius: 8
+                }
+
+                ColumnLayout {
+                    spacing: 4
+                    anchors.fill: parent
+
+                    Text{
+				        color: "White"
+				        text: "Manually Specify IP Address" 
+				        font.family: theme.primaryfont
+                        font.weight: Font.Bold
+                        font.pixelSize: 16
+                    }
+
+                    TextField {
+
+                        Layout.preferredWidth: 334
+			        	id: discoverIP
+			        	color: theme.secondarytextcolor
+			        	font.family: theme.secondaryfont
+
+			        	validator: RegularExpressionValidator {
+			        	    regularExpression:  /^((?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.){0,3}(?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])$/
+			        	}
+                        
+                        onEditingFinished: {
+			    			discovery.checkCachedDevice(discoverIP.text);
+			    		}
+
+                        background: Rectangle {
+                            color: theme.background3
+                            radius: 4
+                        }
+			        }
+
+                    SButton{
+                        Layout.alignment: Qt.AlignRight
+                        color: hovered ? Qt.darker("#531B1B", 1.5) : "#531B1B"
+                        label.font.pixelSize: 16
+                        label.text: "Clear IP Cache"
+
+                        onClicked : {
+                            cacheBurnBox.visible = true
+                        }
+                    }
+
+                }
+            }
+
         Repeater{
             model: service.controllers          
 
-            delegate: Item {
-                id: root
-                width: 260
-                height: content.height
-                property var device: model.modelData.obj
+            delegate: Pane {
+            id: root
+            width: 352 // set Width
+            height: contentHeight + padding * 2// dynamic height based on content
+            padding: 12
 
-                Rectangle {
+            background: Rectangle {
+                color: theme.background2
+                radius: 8
+            }
+            property var device: model.modelData.obj
+
+            property bool isExpanded: false // Use bool, int, real, etc over var for better performance
+
+            ColumnLayout{
+                width: parent.width
+                spacing: 4
+
+                Item{
                     width: parent.width
-                    height: parent.height
-                    color: Qt.lighter(theme.background2, 1.3)
-                    radius: 5
-                }
+                    height: 20
 
-                Column{
-                    id: content
-                    width: parent.width
-                    padding: 15
-                    spacing: 5
+                    Text{
+                        id: deviceName
+                        color: theme.primarytextcolor
+                        text: root.device.name
+                        font.pixelSize: 16
+                        font.family: theme.primaryfont
+                        font.weight: Font.Bold
+                        verticalAlignment: Text.AlignVCenter
+                    }
 
-                    Row{
-                        width: parent.width
-                        height: childrenRect.height
+                    SIconButton{
+                        id: expandButton
+                        width: 24
+                        height: 24
+                        iconSize: height
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
 
-                        Column{
-                            id: leftCol
-                            width: 260
-                            height: childrenRect.height
-                            spacing: 5
+                        icon.source: "qrc:/icons/Resources/Icons/Icons_Onboarding_Icon.svg"
 
-                            Text{
-                                color: theme.primarytextcolor
-                                text: device.name
-                                font.pixelSize: 16
-                                font.family: "Poppins"
-                                font.weight: Font.Bold
-                            }
+                      onClicked: {
+                          root.isExpanded = !root.isExpanded
 
-                            Row{
-                                spacing: 5
-                                Text{
-                                    color: theme.secondarytextcolor
-                                    text: "Id: " + device.id
-                                }
-
-                                Text{
-                                    color: theme.secondarytextcolor
-                                    text: "|"
-                                }
-
-                                Text{
-                                    color: theme.secondarytextcolor
-                                    text: "SKU: "+ device.sku
-                                }  
-                            }
-
-                            Row{
-                                spacing: 5
-                                Text{
-                                    color: theme.secondarytextcolor
-                                    text: "Ip Address: " + (device.ip != "" ? device.ip : "Unknown")
-                                }
-
-                                Text{
-                                    color: theme.secondarytextcolor
-                                    text: "|"
-                                }
-
-                                Text{
-                                    color: theme.secondarytextcolor
-                                    text: "Wifi Version: "+ device.wifiVersionSoft
-                                }  
-                            }
-
-                            Text{
-                                color: theme.secondarytextcolor
-                                text: `Supports DreamView Protocol: ${device.supportDreamView  ? "True" : "False"}`
-                            }
-
-                            Text{
-                                color: theme.secondarytextcolor
-                                text: `Supports Razer Protocol: ${device.supportRazer ? "True" : "False"}`
-                            }
-
-                            // Text{
-                            //     color: theme.warn
-                            //     width: parent.width
-                            //     visible: !device.supportDreamView && !device.supportRazer
-                            //     wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                            //     text: `This device doesn't support Govee's Razer, or Dreamview protocols. SignalRGB is unable to control it...`
-                            // }
-
-                        }
-
+                       }
                     }
                 }
-            }  
+
+                Text{
+                    color: theme.secondarytextcolor
+                    text: "IP Address: " + root.device.ip ?? "Unknown"
+                }
+
+
+                Text{
+                    color: theme.secondarytextcolor
+                    text: `Id: ${root.device.id} | SKU: ${root.device.sku}`
+                }
+
+                Text{
+                    visible: root.isExpanded
+                    color: theme.secondarytextcolor
+                    text: "Wifi Version: "+ root.device.wifiVersionSoft
+                }
+
+                Text{
+                    visible: root.isExpanded
+                    color: theme.secondarytextcolor
+                    text: `Supports DreamView Protocol: ${root.device.supportDreamView  ? "True" : "False"}`
+                }
+
+                Text{
+                    visible: root.isExpanded
+                    color: theme.secondarytextcolor
+                    text: `Supports Razer Protocol: ${root.device.supportRazer ? "True" : "False"}`
+                }
+            }
+            }
+        }
+    }
+
+    //I'll burn this down once I get a better idea of how to do it.
+    //For now it'll serve its purpose.
+    Rectangle{
+    id: cacheBurnBox
+    height: 200
+	width: 520
+    radius: 8
+    color: theme.background2
+    visible: false
+
+        Text{
+            topPadding: 16
+            anchors.horizontalCenter: parent.horizontalCenter
+
+	    	color: "White"
+	    	text: "Are you sure you want to clear the cache?" 
+	    	font.pixelSize: 24
+	    	font.family: theme.primaryfont
+            wrapMode: Text.Wrap
+	    }
+
+        SButton{
+            width: 132
+            x: 122
+            y: 92
+
+            color: hovered ? Qt.darker(theme.background4, 1.5) : theme.background4
+            label.font.pixelSize: 24
+            label.text: "Go Back"
+
+            onClicked : {
+                cacheBurnBox.visible = false
+            }
+        }
+
+        SButton{
+            width: 132
+            x: 278
+            y: 92
+
+            color: hovered ? Qt.darker("#531B1B", 1.5) : "#531B1B"
+            label.font.pixelSize: 24
+            label.text: "I'm Sure"
+
+            onClicked : {
+                discovery.purgeIPCache();
+                cacheBurnBox.visible = false
+            }
         }
     }
 }
