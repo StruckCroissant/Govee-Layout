@@ -1203,12 +1203,12 @@ const GoveeDeviceLibrary = {
 		ledCount: 10
 	},
 	H6168: {
-		productName: "RGBIC TV Light Bars",
-		imageUrl: "",
+		name: "RGBIC TV Light Bars",
+		deviceImage: "",
 		sku: "H6168",
 		state: 1,
 		supportRazer: true,
-		supportFeast: true,
+		supportDreamView: true,
 		ledCount: 0,
 		usesSubDevices: true,
 		subdevices: [
