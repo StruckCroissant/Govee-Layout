@@ -1212,6 +1212,15 @@ const GoveeDeviceLibrary = {
 		supportDreamView: true,
 		ledCount: 10
 	},
+	H61D5: {
+		name: "RGBIC Neon Lights 2",
+		deviceImage: "",
+		sku: "H61D5",
+		state: 1,
+		supportRazer: true,
+		supportDreamView: true,
+		ledCount: 14
+	},
 	H6168: {
 		name: "RGBIC TV Light Bars",
 		deviceImage: "",
@@ -1237,5 +1246,5 @@ const GoveeDeviceLibrary = {
 				ledPositions: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [0, 8], [0, 9]],
 			},
 		]
-	},
+	}
 };
