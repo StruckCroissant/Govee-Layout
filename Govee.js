@@ -1201,5 +1201,14 @@ const GoveeDeviceLibrary = {
 		supportRazer: true,
 		supportDreamView: true,
 		ledCount: 10
-	}
+	},
+	H61D5: {
+		name: "RGBIC Neon Lights 2",
+		deviceImage: "",
+		sku: "H61D5",
+		state: 1,
+		supportRazer: true,
+		supportDreamView: true,
+		ledCount: 14
+	},
 };
