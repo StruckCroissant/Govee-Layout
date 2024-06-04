@@ -1068,12 +1068,12 @@ const GoveeDeviceLibrary = {
 		ledCount: 1
 	},
 	H618A: {
-		productName: "5m RGBIC Basic Strip Light",
-		imageUrl: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/1d2461103cb2eafec6a93b8d8e702d22-pic_h618a.png",
+		name: "5m RGBIC Basic Strip Light",
+		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/1d2461103cb2eafec6a93b8d8e702d22-pic_h618a.png",
 		sku: "H618A",
 		state: 1,
 		supportRazer: false,
-		supportFeast: false,
+		supportDreamView: false,
 		ledCount: 1,
 		usesSubDevices: true,
 		subdevices: [
