@@ -253,6 +253,7 @@ export function DiscoveryService() {
 		});
 
 		this.activeSockets.set(ipAddress, socketServer);
+		this.activeSocketTimer = Date.now();
 		socketServer.start();
 	};
 
