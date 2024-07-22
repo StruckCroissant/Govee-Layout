@@ -1029,7 +1029,7 @@ const GoveeDeviceLibrary = {
 		state: 1,
 		supportRazer: true,
 		supportDreamView: true,
-		ledCount: 40
+		ledCount: 20
 	},
 	H61E1: {
 		name: "LED Strip Light M1",
