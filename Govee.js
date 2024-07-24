@@ -1120,7 +1120,7 @@ const GoveeDeviceLibrary = {
 		state: 1,
 		supportRazer: true,
 		supportDreamView: true,
-		ledCount: 15
+		ledCount: 30
 	},
 	H615B: {
 		name: "10m RGB Strip Light",
