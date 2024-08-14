@@ -211,7 +211,7 @@ function hexToRgb(hex) {
 let UDPServer;
 
 export function DiscoveryService() {
-	this.IconUrl = "https://assets.signalrgb.com/brands/products/govee_ble/icon@2x.png";
+	this.IconUrl = "https://assets.signalrgb.com/brands/govee/logo.png";
 	this.firstRun = true;
 
 	this.Initialize = function(){
