@@ -1247,5 +1247,14 @@ const GoveeDeviceLibrary = {
 				ledPositions: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [0, 8], [0, 9]],
 			},
 		]
+	},
+	H7075: {
+        name: "Govee Outdoor Wall Light, 1500LM",
+        deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h7075.png",
+        sku: "H7075",
+        state: 1,
+        supportRazer: True,
+        supportDreamView: True,
+        ledCount: 10
 	}
 };
