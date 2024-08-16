@@ -191,7 +191,7 @@ function CreateSubDevice(subdevice){
 	device.createSubdevice(subdevice.id);
 
 	device.setSubdeviceName(subdevice.id, subdevice.name);
-	device.setSubdeviceImage(subdevice.id, "");
+	device.setSubdeviceImage(subdevice.id, controller.deviceImage);
 	device.setSubdeviceSize(subdevice.id, subdevice.size[0], subdevice.size[1]);
 	device.setSubdeviceLeds(subdevice.id, subdevice.ledNames, subdevice.ledPositions);
 
@@ -738,7 +738,7 @@ class IPCache{
 const GoveeDeviceLibrary = {
 	H6061: {
 		name: "Glide Hexa Light Panels",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/c5dbf326ba8af931cb8e0b65dd38b363-pic_h6061.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6061.png",
 		sku: "H6061",
 		state: 1,
 		supportRazer: true,
@@ -747,7 +747,7 @@ const GoveeDeviceLibrary = {
 	},
 	H6062: {
 		name: "Glide Wall Light",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/87cb406c046fb458c6d1a7079fc0023c-pic_h6062.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6062.png",
 		sku: "H6062",
 		state: 1,
 		supportRazer: true,
@@ -757,7 +757,7 @@ const GoveeDeviceLibrary = {
 	},
 	H6065: {
 		name: "Glide Y Lights",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/16fcb620704c3e23683e782a149be4d4-pic_h6065.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6065.png",
 		sku: "H6065",
 		state: 1,
 		supportRazer: true,
@@ -766,7 +766,7 @@ const GoveeDeviceLibrary = {
 	},
 	H6066: {
 		name: "Glide Hexa Pro Light Panels",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/96747e10e46f7b2788cb1e708adb1d4c-pic_h6066.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6066.png",
 		sku: "H6066",
 		state: 1,
 		supportRazer: true,
@@ -775,7 +775,7 @@ const GoveeDeviceLibrary = {
 	},
 	H6067: {
 		name: "Glide Tri Light Panels",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/6e575f82591ee04902f5f92a4f0d2301-pic_h6067.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6067.png",
 		sku: "H6067",
 		state: 1,
 		supportRazer: true,
@@ -784,7 +784,7 @@ const GoveeDeviceLibrary = {
 	},
 	H6609: {
 		name: "Gaming Light Strip G1",
-		deviceImage: "",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6609.png",
 		sku: "H6609",
 		state: 1,
 		supportRazer: true,
@@ -793,7 +793,7 @@ const GoveeDeviceLibrary = {
 	},
 	H610A: {
 		name: "Glide Lively Wall Light",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/de6825d1888767fba52136e98c5c1d84-pic_h610a.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h610a.png",
 		sku: "H610A",
 		state: 1,
 		supportRazer: false,
@@ -802,7 +802,7 @@ const GoveeDeviceLibrary = {
 	},
 	H610B: {
 		name: "Glide Music Wall Light",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/2e2d4ef6693f74f7704d3f5e6b42a554-pic_h610b.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h610b.png",
 		sku: "H610B",
 		state: 1,
 		supportRazer: false,
@@ -811,7 +811,7 @@ const GoveeDeviceLibrary = {
 	},
 	H6087: {
 		name: "RGBIC Fixture Lights",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/6b9765e90b3dbb1efd7d18855b90357a-pic_h6087.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6087.png",
 		sku: "H6087",
 		state: 1,
 		supportRazer: false,
@@ -820,7 +820,7 @@ const GoveeDeviceLibrary = {
 	},
 	H6056: {
 		name: "Flow Plus Light Bar",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/d7606004574f941d8775e6f56b127739-pic_h6056.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6056.png",
 		sku: "H6056",
 		state: 1,
 		supportRazer: true,
@@ -846,7 +846,7 @@ const GoveeDeviceLibrary = {
 	},
 	H6046: {
 		name: "RGBIC TV Light Bars",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/456da607c09aec3228f9cf8ae36d72d2-pic_h6046.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6046.png",
 		sku: "H6046",
 		state: 1,
 		supportRazer: true,
@@ -872,7 +872,7 @@ const GoveeDeviceLibrary = {
 	},
 	H6047: {
 		name: "RGBIC Gaming Light Bars",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/21891e5a8b691faf341051b27f3aa237-pic_h6047.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6047.png",
 		sku: "H6047",
 		state: 1,
 		supportRazer: true,
@@ -881,7 +881,7 @@ const GoveeDeviceLibrary = {
 	},
 	H6051: {
 		name: "Table Lamp Lite",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/f015e6f54a8866e0da126715ed459fbd-pic_h6051.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6051.png",
 		sku: "H6051",
 		state: 1,
 		supportRazer: false,
@@ -890,7 +890,7 @@ const GoveeDeviceLibrary = {
 	},
 	H6059: {
 		name: "RGB Night Light Mini",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/4f75d0c656a579ed7ed1a2c149d07425-pic_h6059.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6059.png",
 		sku: "H6059",
 		state: 1,
 		supportRazer: false,
@@ -899,7 +899,7 @@ const GoveeDeviceLibrary = {
 	},
 	H6052: {
 		name: "RGBICWW Table Lamp",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/968a1a8fba6d5badef8bcf165e51eeb2-pic_h6052.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6052.png",
 		sku: "H6052",
 		state: 1,
 		supportRazer: false,
@@ -908,7 +908,7 @@ const GoveeDeviceLibrary = {
 	},
 	H61A0: {
 		name: "3m RGBIC Neon Rope Lights",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/bcae6126eebd16ec544af1667569be90-pic_h61a0.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61a0.png",
 		sku: "H61A0",
 		state: 1,
 		supportRazer: true,
@@ -917,7 +917,7 @@ const GoveeDeviceLibrary = {
 	},
 	H61A1: {
 		name: "2m RGBIC Neon Rope Lights",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/4677148fa9b2569a2bc199a999e079fc-pic_h61a1.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61a1.png",
 		sku: "H61A1",
 		state: 1,
 		supportRazer: true,
@@ -926,7 +926,7 @@ const GoveeDeviceLibrary = {
 	},
 	H61A2: {
 		name: "5m RGBIC Neon Rope Lights",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/62dc52e39efdf5d2f95af407bf9f2a21-pic_h61a2.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61a2.png",
 		sku: "H61A2",
 		state: 1,
 		supportRazer: true,
@@ -935,7 +935,7 @@ const GoveeDeviceLibrary = {
 	},
 	H61A3: {
 		name: "4m RGBIC Neon Rope Lights",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/ae28b6535367606f7e94947f1d9e6b8e-pic_h61a3.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61a3.png",
 		sku: "H61A3",
 		state: 1,
 		supportRazer: true,
@@ -944,7 +944,7 @@ const GoveeDeviceLibrary = {
 	},
 	H619A: {
 		name: "5m RGBIC Pro Strip Lights",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/00d6e3f43eb6e1df50ccbfa84054d7db-pic_h619a.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h619a.png",
 		sku: "H619A",
 		state: 1,
 		supportRazer: true,
@@ -953,7 +953,7 @@ const GoveeDeviceLibrary = {
 	},
 	H619B: {
 		name: "7.5m RGBIC Pro Strip Lights",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/52131582bfb2417cf8ac7c06635f695d-pic_h619b.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h619b.png",
 		sku: "H619B",
 		state: 1,
 		supportRazer: true,
@@ -962,7 +962,7 @@ const GoveeDeviceLibrary = {
 	},
 	H619C: {
 		name: "10m RGBIC Pro Strip Lights",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/f9154fdcba85da2c930f899cb3ea037e-pic_h619c.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h619c.png",
 		sku: "H619C",
 		state: 1,
 		supportRazer: true,
@@ -971,7 +971,7 @@ const GoveeDeviceLibrary = {
 	},
 	H619D: {
 		name: "2*7.5m RGBIC Pro Strip Lights",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/3bb6c520b09205815743a1564998c041-pic_h619d.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h619d.png",
 		sku: "H619D",
 		state: 1,
 		supportRazer: true,
@@ -980,7 +980,7 @@ const GoveeDeviceLibrary = {
 	},
 	H619E: {
 		name: "2*10m RGBIC Pro Strip Lights",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/1957e01b6147810efbf23a5eb08e7791-pic_h619e.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h619e.png",
 		sku: "H619E",
 		state: 1,
 		supportRazer: true,
@@ -989,7 +989,7 @@ const GoveeDeviceLibrary = {
 	},
 	H619Z: {
 		name: "3m RGBIC Pro Strip Lights",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/6ea5b46c846e1d958dc50141019077d7-pic_h619z.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h619z.png",
 		sku: "H619Z",
 		state: 1,
 		supportRazer: true,
@@ -998,7 +998,7 @@ const GoveeDeviceLibrary = {
 	},
 	H61B2: {
 		name: "3m RGBIC Neon TV Backlight",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/5a224ccd2cc850d8b554df2ff0e5a129-pic_h61b2.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61b2.png",
 		sku: "H61B2",
 		state: 1,
 		supportRazer: false,
@@ -1007,7 +1007,7 @@ const GoveeDeviceLibrary = {
 	},
 	H61C2: {
 		name: "RGBIC LED Neon Rope Lights for Desks",
-		deviceImage: "",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61c2.png",
 		sku: "H61C2",
 		state: 1,
 		supportRazer: true,
@@ -1016,7 +1016,7 @@ const GoveeDeviceLibrary = {
 	},
 	H61C3: {
 		name: "RGBIC LED Neon Rope Lights for Desks",
-		deviceImage: "",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61c3.png",
 		sku: "H61C3",
 		state: 1,
 		supportRazer: true,
@@ -1025,7 +1025,7 @@ const GoveeDeviceLibrary = {
 	},
 	H61E0: {
 		name: "LED Strip Light M1",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/5b311c4dd19e17c6eeaf5e662e66904d-pic_h61e1.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61e1.png",
 		sku: "H61E0",
 		state: 1,
 		supportRazer: true,
@@ -1034,7 +1034,7 @@ const GoveeDeviceLibrary = {
 	},
 	H61E1: {
 		name: "LED Strip Light M1",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/5b311c4dd19e17c6eeaf5e662e66904d-pic_h61e1.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61e1.png",
 		sku: "H61E1",
 		state: 1,
 		supportRazer: true,
@@ -1043,7 +1043,7 @@ const GoveeDeviceLibrary = {
 	},
 	H6172: {
 		name: "10m Outdoor RGBIC Strip Light",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/51e20e4b042edb3a4cb74224b5d23ee7-pic_h6172.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6172.png",
 		sku: "H6172",
 		state: 1,
 		supportRazer: false,
@@ -1052,7 +1052,7 @@ const GoveeDeviceLibrary = {
 	},
 	H615A: {
 		name: "5m RGB Strip Light",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/c98cbaaa69b377ee063034857807f3be-pic_h615a.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h615a.png",
 		sku: "H615A",
 		state: 1,
 		supportRazer: false,
@@ -1061,7 +1061,7 @@ const GoveeDeviceLibrary = {
 	},
 	H6110: {
 		name: "2*5m MultiColor Strip Lights",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/269cb9958cd5543e405b76f04b75b706-pic_h6110.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6110.png",
 		sku: "H6110",
 		state: 1,
 		supportRazer: false,
@@ -1070,7 +1070,7 @@ const GoveeDeviceLibrary = {
 	},
 	H618A: {
 		name: "5m RGBIC Basic Strip Light",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/1d2461103cb2eafec6a93b8d8e702d22-pic_h618a.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h618a.png",
 		sku: "H618A",
 		state: 1,
 		supportRazer: false,
@@ -1089,7 +1089,7 @@ const GoveeDeviceLibrary = {
 	},
 	H618C: {
 		name: "10m RGBIC Basic Strip Light",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/453fc13d798f23c94feda52834f73813-pic_h618c.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h618c.png",
 		sku: "H618C",
 		state: 1,
 		supportRazer: true,
@@ -1098,7 +1098,7 @@ const GoveeDeviceLibrary = {
 	},
 	H618E: {
 		name: "2*10m RGBIC Bassic Strip Lights",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/e843bfe60f9c2c161358a050bb50c3c1-pic_h618e.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h618e.png",
 		sku: "H618E",
 		state: 1,
 		supportRazer: false,
@@ -1107,7 +1107,7 @@ const GoveeDeviceLibrary = {
 	},
 	H6117: {
 		name: "2*5m RGBIC Strip Lights",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/c058906f9377b63e5fdd120830148562-pic_h6117.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6117.png",
 		sku: "H6117",
 		state: 1,
 		supportRazer: false,
@@ -1116,7 +1116,7 @@ const GoveeDeviceLibrary = {
 	},
 	H61A5: {
 		name: "10m RGBIC Neon Rope Lights",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/06cff034fc0b736f45812ea294bdbedb-pic_h61a5.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61a5.png",
 		sku: "H61A5",
 		state: 1,
 		supportRazer: true,
@@ -1125,7 +1125,7 @@ const GoveeDeviceLibrary = {
 	},
 	H615B: {
 		name: "10m RGB Strip Light",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/4d980e98e155f851f35f0d608d3d1587-pic_h615b.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h615b.png",
 		sku: "H615B",
 		state: 1,
 		supportRazer: false,
@@ -1134,7 +1134,7 @@ const GoveeDeviceLibrary = {
 	},
 	H615C: {
 		name: "15m RGB Strip Light",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/7bf934361a4114103c460d04fe8b67a8-pic_h615c.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h615c.png",
 		sku: "H615C",
 		state: 1,
 		supportRazer: false,
@@ -1143,7 +1143,7 @@ const GoveeDeviceLibrary = {
 	},
 	H618F: {
 		name: "2*15m RGBIC LED Strip Light",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/ac331687ef8b9fdcd7e77156f9aadb91-pic_h618f.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h618f.png",
 		sku: "H618F",
 		state: 1,
 		supportRazer: false,
@@ -1152,7 +1152,7 @@ const GoveeDeviceLibrary = {
 	},
 	H6072: {
 		name: "RGBICWW Floor Lamp",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/1edf77ca5bb565da3d220db6a2d175c2-pic_h6072.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6072.png",
 		sku: "H6072",
 		state: 1,
 		supportRazer: false,
@@ -1161,7 +1161,7 @@ const GoveeDeviceLibrary = {
 	},
 	H6073: {
 		name: "Smart RGB Floor Lamp",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/ae9ae475d463236be32ad4818d760e0f-pic_h6073.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6073.png",
 		sku: "H6073",
 		state: 1,
 		supportRazer: false,
@@ -1170,7 +1170,7 @@ const GoveeDeviceLibrary = {
 	},
 	H6076: {
 		name: "RGBICW Floor Lamp Basic",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/241e8ee823f9c2a2057ca3668be7281e-pic_h6076.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6076.png",
 		sku: "H6076",
 		state: 1,
 		supportRazer: false,
@@ -1179,7 +1179,7 @@ const GoveeDeviceLibrary = {
 	},
 	H7060: {
 		name: "4 Pack RGBIC Flood Lights",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/f7817d0f6284c5403324e1268beed798-pic_h7060.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h7060.png",
 		sku: "H7060",
 		state: 1,
 		supportRazer: false,
@@ -1188,7 +1188,7 @@ const GoveeDeviceLibrary = {
 	},
 	H7061: {
 		name: "2 Pack RGBIC Flood Lights",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/aae0bc2498289d61b4ecc0f798e33759-pic_h7061.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h7061.png",
 		sku: "H7061",
 		state: 1,
 		supportRazer: false,
@@ -1197,7 +1197,7 @@ const GoveeDeviceLibrary = {
 	},
 	H7062: {
 		name: "6 Pack RGBIC Flood Lights",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/aa27302d9bada483b7e99b3a8a4930a8-pic_h7062.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h7062.png",
 		sku: "H7062",
 		state: 1,
 		supportRazer: false,
@@ -1206,7 +1206,7 @@ const GoveeDeviceLibrary = {
 	},
 	H70B1: {
 		name: "Curtain Lights",
-		deviceImage: "https://d1f2504ijhdyjw.cloudfront.net/posting-img/db7c2bd49b5dc177a4010f773f7e1e32-70b1%E5%8C%85%E8%A3%85.png",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h70b1.png",
 		sku: "H70B1",
 		state: 1,
 		supportRazer: true,
@@ -1215,7 +1215,7 @@ const GoveeDeviceLibrary = {
 	},
 	H61D5: {
 		name: "RGBIC Neon Lights 2",
-		deviceImage: "",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61d5.png",
 		sku: "H61D5",
 		state: 1,
 		supportRazer: true,
@@ -1224,7 +1224,7 @@ const GoveeDeviceLibrary = {
 	},
 	H6168: {
 		name: "RGBIC TV Light Bars",
-		deviceImage: "",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6168.png",
 		sku: "H6168",
 		state: 1,
 		supportRazer: true,
@@ -1253,8 +1253,8 @@ const GoveeDeviceLibrary = {
         deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h7075.png",
         sku: "H7075",
         state: 1,
-        supportRazer: True,
-        supportDreamView: True,
+        supportRazer: true,
+        supportDreamView: true,
         ledCount: 10
 	}
 };
