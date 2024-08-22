@@ -1256,5 +1256,15 @@ const GoveeDeviceLibrary = {
         supportRazer: true,
         supportDreamView: true,
         ledCount: 10
+	},
+	H606A: {
+		name: "Hex Glide Ultra",
+		deviceImage : "https://assets.signalrgb.com/devices/brands/govee/wifi/h606a.png",
+		sku: "H606A",
+		state: 1,
+		supportRazer: true,
+		supportDreamView: true,
+		ledCount: 10
 	}
+
 };
