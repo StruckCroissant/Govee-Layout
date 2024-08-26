@@ -1177,6 +1177,15 @@ const GoveeDeviceLibrary = {
 		supportDreamView: false,
 		ledCount: 1
 	},
+	H6079: {
+        name: "RGBICWW Floor Lamp Pro",
+        deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6079.png",
+        SKU: "H6079",
+        state: 1,
+        supportRazer: true,
+        supportDreamView: true,
+        ledCount: 10,
+    },
 	H7060: {
 		name: "4 Pack RGBIC Flood Lights",
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h7060.png",
@@ -1264,7 +1273,7 @@ const GoveeDeviceLibrary = {
 		state: 1,
 		supportRazer: true,
 		supportDreamView: true,
-		ledCount: 10
+		ledCount: 10, // Linked panels that goes up to 21 per controller
+		hasVariableLedCount: true
 	}
-
 };
