@@ -1174,8 +1174,8 @@ const GoveeDeviceLibrary = {
 		sku: "H6076",
 		state: 1,
 		supportRazer: false,
-		supportDreamView: false,
-		ledCount: 1
+		supportDreamView: true,
+		ledCount: 14
 	},
 	H6079: {
         name: "RGBICWW Floor Lamp Pro",
