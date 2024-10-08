@@ -3,33 +3,26 @@ export function Name() { return "Govee"; }
 export function Version() { return "1.0.0"; }
 export function Type() { return "network"; }
 export function Publisher() { return "WhirlwindFX"; }
-export function Size() { return [22, 1]; }
-export function DefaultPosition() {return [75, 70]; }
-export function DefaultScale(){return 8.0;}
+export function Size() { return [1, 1]; }
+export function DeviceType() { return "wifi"; }
+export function SubdeviceController(){ return true; }
 /* global
 controller:readonly
 discovery: readonly
 TurnOffOnShutdown:readonly
-variableLedCount:readonly
 LightingMode:readonly
 forcedColor:readonly
 */
 export function ControllableParameters() {
 	return [
-		{"property":"TurnOffOnShutdown", "group":"settings", "label":"Turn off on App Exit", "type":"boolean", "default":"false"},
-		{"property":"LightingMode", "group":"lighting", "label":"Lighting Mode", "type":"combobox", "values":["Canvas", "Forced"], "default":"Canvas"},
-		{"property":"forcedColor", "group":"lighting", "label":"Forced Color", "min":"0", "max":"360", "type":"color", "default":"#009bde"},
+		{property:"TurnOffOnShutdown", group:"settings", label:"Turn off on App Exit", description: "", type:"boolean", default:"false"},
+		{property:"LightingMode", group:"lighting", label:"Lighting Mode", description: "Determines where the device's RGB comes from. Canvas will pull from the active Effect, while Forced will override it to a specific color", type:"combobox", values:["Canvas", "Forced"], default:"Canvas"},
+		{property:"forcedColor", group:"lighting", label:"Forced Color", description: "The color used when 'Forced' Lighting Mode is enabled", min:"0", max:"360", type:"color", default:"#009bde"},
 	];
 }
 
-export function SubdeviceController() { return false; }
-
 /** @type {GoveeProtocol} */
 let govee;
-let ledCount = 4;
-let ledNames = [];
-let ledPositions = [];
-let subdevices = [];
 
 export function Initialize(){
 	device.addFeature("base64");
@@ -52,7 +45,6 @@ export function Initialize(){
 	UDPServer.start();
 	//Establish a new udp server. This is now required for using udp.send.
 
-	ClearSubdevices();
 	fetchDeviceInfoFromTableAndConfigure();
 
 	govee = new GoveeProtocol(controller.ip, controller.supportDreamView, controller.supportRazer);
@@ -64,13 +56,11 @@ export function Initialize(){
 }
 
 export function Render(){
-	const RGBData = subdevices.length > 0 ? GetRGBFromSubdevices() : GetDeviceRGB();
-
-	govee.SendRGB(RGBData);
+	govee.SendRGB();
 	device.pause(10);
 }
 
-export function Shutdown(suspend){
+export function Shutdown(SystemSuspending){
 	govee.SetRazerMode(false);
 
 	if(TurnOffOnShutdown){
@@ -78,135 +68,23 @@ export function Shutdown(suspend){
 	}
 }
 
-export function onvariableLedCountChanged(){
-	SetLedCount(variableLedCount);
-}
-
-function GetRGBFromSubdevices(){
-	const RGBData = [];
-
-	for(const subdevice of subdevices){
-		const ledPositions = subdevice.ledPositions;
-
-		for(let i = 0 ; i < ledPositions.length; i++){
-			const ledPosition = ledPositions[i];
-			let color;
-
-			if (LightingMode === "Forced") {
-				color = hexToRgb(forcedColor);
-			} else {
-				color = device.subdeviceColor(subdevice.id, ledPosition[0], ledPosition[1]);
-			}
-
-			RGBData[i * 3] = color[0];
-			RGBData[i * 3 + 1] = color[1];
-			RGBData[i * 3 + 2] = color[2];
-		}
-	}
-
-	return RGBData;
-}
-
-function GetDeviceRGB(){
-	const RGBData = new Array(ledCount * 3);
-
-	for(let i = 0 ; i < ledPositions.length; i++){
-		const ledPosition = ledPositions[i];
-		let color;
-
-		if (LightingMode === "Forced") {
-			color = hexToRgb(forcedColor);
-		} else {
-			color = device.color(ledPosition[0], ledPosition[1]);
-		}
-
-		RGBData[i * 3] = color[0];
-		RGBData[i * 3 + 1] = color[1];
-		RGBData[i * 3 + 2] = color[2];
-	}
-
-	return RGBData;
-}
-
 function fetchDeviceInfoFromTableAndConfigure() {
 	if(GoveeDeviceLibrary.hasOwnProperty(controller.sku)){
 		const GoveeDeviceInfo = GoveeDeviceLibrary[controller.sku];
 		device.setName(`Govee ${GoveeDeviceInfo.name}`);
-
-		if(GoveeDeviceInfo.hasVariableLedCount){
-			device.addProperty({"property": "variableLedCount", label: "Segment Count", "type": "number", "min": 1, "max": 60, default: GoveeDeviceInfo.ledCount, step: 1});
-			SetLedCount(variableLedCount);
-		}else{
-			SetLedCount(GoveeDeviceInfo.ledCount);
-			device.removeProperty("variableLedCount");
-		}
-
-		if(GoveeDeviceInfo.usesSubDevices){
-			device.SetIsSubdeviceController(true);
-
-			for(const subdevice of GoveeDeviceInfo.subdevices){
-				CreateSubDevice(subdevice);
-			}
-		}else{
-			device.SetIsSubdeviceController(false);
-		}
-
+		device.addChannel(`Channel 1`, GoveeDeviceInfo.ledCount);
+		device.channel(`Channel 1`).SetLedLimit(GoveeDeviceInfo.ledCount);
+		device.SetLedLimit(GoveeDeviceInfo.ledCount);
 	}else{
-		device.log("Using Default Layout...");
+		device.log(`SKU (${controller.sku}) not found, using single led mode!`);
 		device.setName(`Govee: ${controller.sku}`);
-		SetLedCount(20);
+		device.addChannel(`Channel 1`, 1);
+		device.channel(`Channel 1`).SetLedLimit(1);
+		device.SetLedLimit(1);
 	}
 }
 
-function SetLedCount(count){
-	ledCount = count;
-
-	CreateLedMap();
-	device.setSize([ledCount, 1]);
-	device.setControllableLeds(ledNames, ledPositions);
-}
-
-function CreateLedMap(){
-	ledNames = [];
-	ledPositions = [];
-
-	for(let i = 0; i < ledCount; i++){
-		ledNames.push(`Led ${i + 1}`);
-		ledPositions.push([i, 0]);
-	}
-}
-
-function ClearSubdevices(){
-	for(const subdevice of device.getCurrentSubdevices()){
-		device.removeSubdevice(subdevice);
-	}
-
-	subdevices = [];
-}
-
-function CreateSubDevice(subdevice){
-	const count = device.getCurrentSubdevices().length;
-	device.log(subdevice);
-	subdevice.id = `${subdevice.name} ${count + 1}`;
-	device.createSubdevice(subdevice.id);
-
-	device.setSubdeviceName(subdevice.id, subdevice.name);
-	device.setSubdeviceImage(subdevice.id, controller.deviceImage);
-	device.setSubdeviceSize(subdevice.id, subdevice.size[0], subdevice.size[1]);
-	device.setSubdeviceLeds(subdevice.id, subdevice.ledNames, subdevice.ledPositions);
-
-	subdevices.push(subdevice);
-}
-
-function hexToRgb(hex) {
-	const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-	const colors = [];
-	colors[0] = parseInt(result[1], 16);
-	colors[1] = parseInt(result[2], 16);
-	colors[2] = parseInt(result[3], 16);
-
-	return colors;
-}
+// -------------------------------------------<( Discovery Service )>--------------------------------------------------
 
 let UDPServer;
 
@@ -387,7 +265,7 @@ class GoveeController{
 			name: "Unknown",
 			supportDreamView: false,
 			supportRazer: false,
-			deviceImage: "https://assets.signalrgb.com/brands/products/govee_ble/icon@2x.png"
+			deviceImage: "https://assets.signalrgb.com/brands/govee/logo.png"
 		};
 	}
 
@@ -541,7 +419,25 @@ class GoveeProtocol {
 		}));
 	}
 
-	SendRGB(RGBData) {
+	SendRGB(overrideColor) {
+
+		//Fetch Colors
+		let ChannelLedCount = device.channel(`Channel 1`).LedCount();
+		const componentChannel = device.channel(`Channel 1`);
+
+		let RGBData = [];
+
+		if(LightingMode === "Forced"){
+			RGBData = device.createColorArray(forcedColor, ChannelLedCount, "Inline", RGBconfig);
+		}else if(componentChannel.shouldPulseColors()){
+			const pulseColor = device.getChannelPulseColor(`Channel 1`);
+			const pulseCount = device.channel(`Channel 1`).LedLimit();
+			RGBData = device.createColorArray(pulseColor, pulseCount, "Inline", RGBconfig);
+		}else if(overrideColor){
+			RGBData = device.createColorArray(overrideColor, ChannelLedCount, "Inline", RGBconfig);
+		}else{
+			RGBData = device.channel(`Channel 1`).getColors("Inline", RGBconfig);
+		}
 
 		if (this.supportDreamView) {
 			const packet = this.createDreamViewPacket(RGBData);
@@ -733,7 +629,7 @@ class IPCache{
 }
 
 // eslint-disable-next-line max-len
-/** @typedef { {name: string, deviceImage: string, sku: string, state: number, supportRazer: boolean, supportDreamView: boolean, ledCount: number, hasVariableLedCount?: boolean } } GoveeDevice */
+/** @typedef { {name: string, deviceImage: string, sku: string, state: number, supportRazer: boolean, supportDreamView: boolean, ledCount: number } } GoveeDevice */
 /** @type {Object.<string, GoveeDevice>} */
 const GoveeDeviceLibrary = {
 	H6061: {
@@ -741,8 +637,11 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6061.png",
 		sku: "H6061",
 		state: 1,
-		supportRazer: true,
+		// Dreamview method has priority
+		// Disable if you want Razer mode
+		// Priority: Dreamview > Razer > Single led
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 15
 	},
 	H6062: {
@@ -750,18 +649,17 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6062.png",
 		sku: "H6062",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 29, // This can support more? 5 * Segment Count - 1?
-		hasVariableLedCount: true,
 	},
 	H6065: {
 		name: "Glide Y Lights",
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6065.png",
 		sku: "H6065",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 15
 	},
 	H6066: {
@@ -769,8 +667,8 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6066.png",
 		sku: "H6066",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 15
 	},
 	H6067: {
@@ -778,8 +676,8 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6067.png",
 		sku: "H6067",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 15
 	},
 	H6609: {
@@ -787,8 +685,8 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6609.png",
 		sku: "H6609",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 10
 	},
 	H610A: {
@@ -823,60 +721,26 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6056.png",
 		sku: "H6056",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
-		ledCount: 0,
-		usesSubDevices: true,
-		subdevices: [
-			{
-				name: "Flow Plus Light Bar",
-				ledCount: 3,
-				size: [1, 3],
-				ledNames: ["Led 1", "Led 2", "Led 3"],
-				ledPositions: [[0, 0], [0, 1], [0, 2]],
-			},
-			{
-				name: "Flow Plus Light Bar",
-				ledCount: 3,
-				size: [1, 3],
-				ledNames: ["Led 1", "Led 2", "Led 3"],
-				ledPositions: [[0, 0], [0, 1], [0, 2]],
-			},
-		]
+		supportRazer: true,
+		ledCount: 10
 	},
 	H6046: {
 		name: "RGBIC TV Light Bars",
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6046.png",
 		sku: "H6046",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
-		ledCount: 0,
-		usesSubDevices: true,
-		subdevices: [
-			{
-				name: "RGBIC TV Light Bars",
-				ledCount: 10,
-				size: [1, 10],
-				ledNames: ["Led 1", "Led 2", "Led 3", "Led 4", "Led 5", "Led 6", "Led 7", "Led 8", "Led 9", "Led 10"],
-				ledPositions: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [0, 8], [0, 9]],
-			},
-			{
-				name: "RGBIC TV Light Bars",
-				ledCount: 10,
-				size: [1, 10],
-				ledNames: ["Led 1", "Led 2", "Led 3", "Led 4", "Led 5", "Led 6", "Led 7", "Led 8", "Led 9", "Led 10"],
-				ledPositions: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [0, 8], [0, 9]],
-			},
-		]
+		supportRazer: true,
+		ledCount: 10
 	},
 	H6047: {
 		name: "RGBIC Gaming Light Bars",
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6047.png",
 		sku: "H6047",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 15
 	},
 	H6051: {
@@ -911,8 +775,8 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61a0.png",
 		sku: "H61A0",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 15
 	},
 	H61A1: {
@@ -920,8 +784,8 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61a0.png",
 		sku: "H61A1",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 15
 	},
 	H61A2: {
@@ -929,8 +793,8 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61a0.png",
 		sku: "H61A2",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 15
 	},
 	H61A3: {
@@ -938,8 +802,8 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61a0.png",
 		sku: "H61A3",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 15
 	},
 	H619A: {
@@ -947,8 +811,8 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h619a.png",
 		sku: "H619A",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 15
 	},
 	H619B: {
@@ -956,8 +820,8 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h619a.png",
 		sku: "H619B",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 15
 	},
 	H619C: {
@@ -965,8 +829,8 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h619a.png",
 		sku: "H619C",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 15
 	},
 	H619D: {
@@ -974,8 +838,8 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h619a.png",
 		sku: "H619D",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 15
 	},
 	H619E: {
@@ -983,8 +847,8 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h619a.png",
 		sku: "H619E",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 10
 	},
 	H619Z: {
@@ -992,8 +856,8 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h619a.png",
 		sku: "H619Z",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 12
 	},
 	H61B2: {
@@ -1010,8 +874,8 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61c2.png",
 		sku: "H61C2",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 16
 	},
 	H61C3: {
@@ -1019,8 +883,8 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61c2.png",
 		sku: "H61C3",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 16
 	},
 	H61E0: {
@@ -1028,8 +892,8 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61e0.png",
 		sku: "H61E0",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 20
 	},
 	H61E1: {
@@ -1037,8 +901,8 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61e0.png",
 		sku: "H61E1",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 15
 	},
 	H6172: {
@@ -1075,25 +939,15 @@ const GoveeDeviceLibrary = {
 		state: 1,
 		supportRazer: false,
 		supportDreamView: false,
-		ledCount: 1,
-		usesSubDevices: true,
-		subdevices: [
-			{
-				name: "RGBIC Basic Strip Light",
-				ledCount: 10,
-				size: [1, 10],
-				ledNames: ["Led 1", "Led 2", "Led 3", "Led 4", "Led 5", "Led 6", "Led 7", "Led 8", "Led 9", "Led 10"],
-				ledPositions: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [0, 8], [0, 9]],
-			},
-		]
+		ledCount: 1
 	},
 	H618C: {
 		name: "10m RGBIC Basic Strip Light",
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h618a.png",
 		sku: "H618C",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 15
 	},
 	H618E: {
@@ -1119,8 +973,8 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61a0.png",
 		sku: "H61A5",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 30
 	},
 	H615B: {
@@ -1218,8 +1072,8 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h70b1.png",
 		sku: "H70B1",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 10
 	},
 	H61D5: {
@@ -1227,8 +1081,8 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61d5.png",
 		sku: "H61D5",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 7
 	},
 	H6168: {
@@ -1236,26 +1090,9 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6168.png",
 		sku: "H6168",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
-		ledCount: 0,
-		usesSubDevices: true,
-		subdevices: [
-			{
-				name: "RGBIC TV Light Bars",
-				ledCount: 10,
-				size: [1, 10],
-				ledNames: ["Led 1", "Led 2", "Led 3", "Led 4", "Led 5", "Led 6", "Led 7", "Led 8", "Led 9", "Led 10"],
-				ledPositions: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [0, 8], [0, 9]],
-			},
-			{
-				name: "RGBIC TV Light Bars",
-				ledCount: 10,
-				size: [1, 10],
-				ledNames: ["Led 1", "Led 2", "Led 3", "Led 4", "Led 5", "Led 6", "Led 7", "Led 8", "Led 9", "Led 10"],
-				ledPositions: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [0, 8], [0, 9]],
-			},
-		]
+		supportRazer: true,
+		ledCount: 10
 	},
 	H7075: {
         name: "Govee Outdoor Wall Light, 1500LM",
@@ -1271,9 +1108,8 @@ const GoveeDeviceLibrary = {
 		deviceImage : "https://assets.signalrgb.com/devices/brands/govee/wifi/h606a.png",
 		sku: "H606A",
 		state: 1,
-		supportRazer: true,
 		supportDreamView: true,
+		supportRazer: true,
 		ledCount: 10, // Linked panels that goes up to 21 per controller
-		hasVariableLedCount: true
 	}
 };
