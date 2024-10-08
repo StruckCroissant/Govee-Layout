@@ -695,8 +695,8 @@ const GoveeDeviceLibrary = {
 		sku: "H610A",
 		state: 1,
 		supportRazer: false,
-		supportDreamView: false,
-		ledCount: 1
+		supportDreamView: true,
+		ledCount: 12
 	},
 	H610B: {
 		name: "Glide Music Wall Light",
