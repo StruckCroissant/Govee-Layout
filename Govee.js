@@ -186,7 +186,7 @@ export function DiscoveryService() {
 			cont.obj.update();
 		}
 
-		this.clearSockets();
+		//this.clearSockets();
 		this.CheckForDevices();
 	};
 
