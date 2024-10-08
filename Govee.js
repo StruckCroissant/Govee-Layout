@@ -428,15 +428,15 @@ class GoveeProtocol {
 		let RGBData = [];
 
 		if(LightingMode === "Forced"){
-			RGBData = device.createColorArray(forcedColor, ChannelLedCount, "Inline", RGBconfig);
+			RGBData = device.createColorArray(forcedColor, ChannelLedCount, "Inline");
 		}else if(componentChannel.shouldPulseColors()){
 			const pulseColor = device.getChannelPulseColor(`Channel 1`);
 			const pulseCount = device.channel(`Channel 1`).LedLimit();
-			RGBData = device.createColorArray(pulseColor, pulseCount, "Inline", RGBconfig);
+			RGBData = device.createColorArray(pulseColor, pulseCount, "Inline");
 		}else if(overrideColor){
-			RGBData = device.createColorArray(overrideColor, ChannelLedCount, "Inline", RGBconfig);
+			RGBData = device.createColorArray(overrideColor, ChannelLedCount, "Inline");
 		}else{
-			RGBData = device.channel(`Channel 1`).getColors("Inline", RGBconfig);
+			RGBData = device.channel(`Channel 1`).getColors("Inline");
 		}
 
 		if (this.supportDreamView) {
