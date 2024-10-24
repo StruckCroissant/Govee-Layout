@@ -273,8 +273,8 @@ export function DiscoveryService() {
 
 	this.forceDiscovery = function(value) {
 		const packetType = JSON.parse(value.response).msg.cmd;
-		service.log(`Type: ${packetType}`);
-
+		//service.log(`Type: ${packetType}`);
+		
 		if(packetType === "scan"){
 			service.log(`New host discovered!`);
 			service.log(value);
