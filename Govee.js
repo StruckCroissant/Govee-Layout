@@ -275,11 +275,18 @@ export function DiscoveryService() {
 		const packetType = JSON.parse(value.response).msg.cmd;
 		//service.log(`Type: ${packetType}`);
 		
-		if(packetType === "scan"){
-			service.log(`New host discovered!`);
-			service.log(value);
-			this.CreateControllerDevice(value);
+		if(packetType != "scan"){
+			return;
 		}
+		
+		const isValid = JSON.parse(value.response).msg.data.hasOwnProperty("ip");
+		if(!isValid){
+			return;
+		}
+
+		service.log(`New host discovered!`);
+		service.log(value);
+		this.CreateControllerDevice(value);
 	};
 
 	this.purgeIPCache = function() {
@@ -317,15 +324,21 @@ export function DiscoveryService() {
 	};
 
 	this.Discovered = function(value) {
-
 		const packetType = JSON.parse(value.response).msg.cmd;
-		service.log(`Type: ${packetType}`);
-
-		if(packetType === "scan"){
-			service.log(`New host discovered!`);
-			service.log(value);
-			this.CreateControllerDevice(value);
+		//service.log(`Type: ${packetType}`);
+		
+		if(packetType != "scan"){
+			return;
 		}
+		
+		const isValid = JSON.parse(value.response).msg.data.hasOwnProperty("ip");
+		if(!isValid){
+			return;
+		}
+
+		service.log(`New host discovered!`);
+		service.log(value);
+		this.CreateControllerDevice(value);
 	};
 
 	this.Removal = function(value){
@@ -350,7 +363,7 @@ class GoveeController{
 		const packet = JSON.parse(value.response).msg;
 		const response = packet.data;
 		const type = packet.cmd;
-		service.log(`Type: ${type}`);
+		//service.log(`Type: ${type}`);
 
 		service.log(response);
 
