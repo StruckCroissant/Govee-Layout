@@ -1098,6 +1098,15 @@ const GoveeDeviceLibrary = {
 		supportRazer: true,
 		ledCount: 7
 	},
+	H6167: {
+		name: "RGBIC TV Light Bars",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6168.png",
+		sku: "H6167",
+		state: 1,
+		supportDreamView: true,
+		supportRazer: true,
+		ledCount: 10
+	},
 	H6168: {
 		name: "RGBIC TV Light Bars",
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6168.png",
