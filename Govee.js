@@ -246,6 +246,15 @@ const GoveeDeviceLibrary = {
 		supportFeast: false,
 		ledCount: 1
 	},
+	H6088: {
+		productName: "RGBIC Cube Wall Sconces",
+		imageUrl: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/6b9765e90b3dbb1efd7d18855b90357a-pic_h6087.png",
+		sku: "H6088",
+		state: 1,
+		supportRazer: true,
+		supportFeast: true,
+		ledCount: 1
+	},
 	H6056: {
 		productName: "Flow Plus Light Bar",
 		imageUrl: "https://d1f2504ijhdyjw.cloudfront.net/deals-img/d7606004574f941d8775e6f56b127739-pic_h6056.png",
