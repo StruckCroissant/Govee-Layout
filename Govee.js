@@ -756,6 +756,15 @@ const GoveeDeviceLibrary = {
 		supportRazer: true,
 		ledCount: 15
 	},
+	H6047: {
+		name: "Ceiling light",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6047.png",
+		sku: "H60A1",
+		state: 1,
+		supportDreamView: true,
+		supportRazer: true,
+		ledCount: 14
+	},
 	H6051: {
 		name: "Table Lamp Lite",
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6052.png",
