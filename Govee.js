@@ -78,9 +78,9 @@ function fetchDeviceInfoFromTableAndConfigure() {
 	}else{
 		device.log(`SKU (${controller.sku}) not found, using single led mode!`);
 		device.setName(`Govee: ${controller.sku}`);
-		device.addChannel(`Channel 1`, 15);
-		device.channel(`Channel 1`).SetLedLimit(15);
-		device.SetLedLimit(15);
+		device.addChannel(`Channel 1`, 30);
+		device.channel(`Channel 1`).SetLedLimit(30);
+		device.SetLedLimit(30);
 	}
 }
 
