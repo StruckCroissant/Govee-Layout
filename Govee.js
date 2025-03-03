@@ -950,8 +950,8 @@ const GoveeDeviceLibrary = {
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h618a.png",
 		sku: "H618A",
 		state: 1,
-		supportRazer: false,
-		supportDreamView: false,
+		supportRazer: true,
+		supportDreamView: true,
 		ledCount: 1
 	},
 	H618C: {
