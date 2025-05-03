@@ -1,6 +1,6 @@
 # Govee
 
-[![Add To Installation](https://marketplace.signalrgb.com/resources/add-extension-256.png 'Add to My SignalRGB Installation')](signalrgb://addon/install?url=https://gitlab.com/signalrgb/Govee)
+[![Add To Installation](https://marketplace.signalrgb.com/resources/add-extension-256.png 'Add to My SignalRGB Installation')](signalrgb://addon/install?url=https://gitlab.com/RobThePCGuy/Govee)
 
 ## Getting started
 This is a simple SignalRGB Addon to add support for Govee Wifi Devices to SignalRGB.

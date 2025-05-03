@@ -83,28 +83,35 @@ export function onvariableLedCountChanged(){
 }
 
 function GetRGBFromSubdevices(){
-	const RGBData = [];
+    const totalLeds = subdevices.reduce((sum, sd) => sum + sd.ledCount, 0);
+    const RGBData = new Array(totalLeds * 3);
+    let currentLedIndex = 0;
 
-	for(const subdevice of subdevices){
-		const ledPositions = subdevice.ledPositions;
+    for(const subdevice of subdevices){
+        for(let i = 0; i < subdevice.ledCount; i++){
+            let color;
 
-		for(let i = 0 ; i < ledPositions.length; i++){
-			const ledPosition = ledPositions[i];
-			let color;
+            if (LightingMode === "Forced") {
+                color = hexToRgb(forcedColor);
+            } else {
+                try {
+                    color = device.subdeviceColor(subdevice.id, 0, i);
+                } catch (e) {
+                    color = [0, 0, 0];
+                }
+            }
 
-			if (LightingMode === "Forced") {
-				color = hexToRgb(forcedColor);
-			} else {
-				color = device.subdeviceColor(subdevice.id, ledPosition[0], ledPosition[1]);
-			}
+            const dataIndex = currentLedIndex * 3;
 
-			RGBData[i * 3] = color[0];
-			RGBData[i * 3 + 1] = color[1];
-			RGBData[i * 3 + 2] = color[2];
-		}
-	}
+            RGBData[dataIndex]     = color[0];
+            RGBData[dataIndex + 1] = color[1];
+            RGBData[dataIndex + 2] = color[2];
 
-	return RGBData;
+            currentLedIndex++;
+        }
+    }
+
+    return RGBData;
 }
 
 function GetDeviceRGB(){
@@ -497,22 +504,24 @@ class GoveeProtocol {
 		return checksum;
 	}
 
+	// Inside class GoveeProtocol
 	createDreamViewPacket(colors) {
-		// Define the Dreamview protocol header
-		const header = [0xBB, 0x00, 0x20, 0xB0, 0x01, colors.length / 3];
-		const fullPacket = header.concat(colors);
+		const numUnitsToSend = 10;
+		const colorsToSend = colors.slice(0, numUnitsToSend * 3);
+		const header = [0xBB, 0x00, 0x20, 0xB0, 0x01, numUnitsToSend];
+		const fullPacket = header.concat(colorsToSend);
 		const checksum = this.calculateXorChecksum(fullPacket);
 		fullPacket.push(checksum);
-
 		return fullPacket;
 	}
 
 	createRazerPacket(colors) {
-		// Define the Razer protocol header
-		const header = [0xBB, 0x00, 0x0E, 0xB0, 0x01, colors.length / 3];
-		const fullPacket = header.concat(colors);
-		fullPacket.push(0); // Checksum
-
+		const numUnitsToSend = 10;
+		const colorsToSend = colors.slice(0, numUnitsToSend * 3);
+		const header = [0xBB, 0x00, 0x0E, 0xB0, 0x01, numUnitsToSend];
+		const fullPacket = header.concat(colorsToSend);
+		const checksum = this.calculateXorChecksum(fullPacket);
+		fullPacket.push(checksum);
 		return fullPacket;
 	}
 
@@ -1191,14 +1200,14 @@ const GoveeDeviceLibrary = {
 		ledCount: 14
 	},
 	H6079: {
-        name: "RGBICWW Floor Lamp Pro",
-        deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6079.png",
-        SKU: "H6079",
-        state: 1,
-        supportRazer: true,
-        supportDreamView: true,
-        ledCount: 10,
-    },
+		name: "RGBICWW Floor Lamp Pro",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6079.png",
+		SKU: "H6079",
+		state: 1,
+		supportRazer: true,
+		supportDreamView: true,
+		ledCount: 10,
+	},
 	H7060: {
 		name: "4 Pack RGBIC Flood Lights",
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h7060.png",
@@ -1234,6 +1243,159 @@ const GoveeDeviceLibrary = {
 		supportRazer: true,
 		supportDreamView: true,
 		ledCount: 10
+	},
+	H70BC: {
+		name: "Netflix Curtain Lights",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h70b1.png",
+		sku: "H70BC",
+		state: 1,
+		supportRazer: true,
+		supportDreamView: true,
+		ledCount: 0,
+		hasVariableLedCount: false,
+		usesSubDevices: true,
+		subdevices: [
+			{
+				name: "Netflix Curtain Lights IC1",
+				ledCount: 20,
+				size: [1, 20],
+				ledNames: Array.from({ length: 20 }, (_, i) => `Led ${i + 1}`),
+				ledPositions: Array.from({ length: 20 }, (_, i) => [0, i]),
+			},
+			{
+				name: "Netflix Curtain Lights IC2",
+				ledCount: 20,
+				size: [1, 20],
+				ledNames: Array.from({ length: 20 }, (_, i) => `Led ${i + 1}`),
+				ledPositions: Array.from({ length: 20 }, (_, i) => [1, i]),
+			},
+			{
+				name: "Netflix Curtain Lights IC3",
+				ledCount: 20,
+				size: [1, 20],
+				ledNames: Array.from({ length: 20 }, (_, i) => `Led ${i + 1}`),
+				ledPositions: Array.from({ length: 20 }, (_, i) => [2, i]),
+			},
+			{
+				name: "Netflix Curtain Lights IC4",
+				ledCount: 20,
+				size: [1, 20],
+				ledNames: Array.from({ length: 20 }, (_, i) => `Led ${i + 1}`),
+				ledPositions: Array.from({ length: 20 }, (_, i) => [3, i]),
+			},
+			{
+				name: "Netflix Curtain Lights IC5",
+				ledCount: 20,
+				size: [1, 20],
+				ledNames: Array.from({ length: 20 }, (_, i) => `Led ${i + 1}`),
+				ledPositions: Array.from({ length: 20 }, (_, i) => [4, i]),
+			},
+			{
+				name: "Netflix Curtain Lights IC6",
+				ledCount: 20,
+				size: [1, 20],
+				ledNames: Array.from({ length: 20 }, (_, i) => `Led ${i + 1}`),
+				ledPositions: Array.from({ length: 20 }, (_, i) => [5, i]),
+			},
+			{
+				name: "Netflix Curtain Lights IC7",
+				ledCount: 20,
+				size: [1, 20],
+				ledNames: Array.from({ length: 20 }, (_, i) => `Led ${i + 1}`),
+				ledPositions: Array.from({ length: 20 }, (_, i) => [6, i]),
+			},
+			{
+				name: "Netflix Curtain Lights IC8",
+				ledCount: 20,
+				size: [1, 20],
+				ledNames: Array.from({ length: 20 }, (_, i) => `Led ${i + 1}`),
+				ledPositions: Array.from({ length: 20 }, (_, i) => [7, i]),
+			},
+			{
+				name: "Netflix Curtain Lights IC9",
+				ledCount: 20,
+				size: [1, 20],
+				ledNames: Array.from({ length: 20 }, (_, i) => `Led ${i + 1}`),
+				ledPositions: Array.from({ length: 20 }, (_, i) => [8, i]),
+			},
+			{
+				name: "Netflix Curtain Lights IC10",
+				ledCount: 20,
+				size: [1, 20],
+				ledNames: Array.from({ length: 20 }, (_, i) => `Led ${i + 1}`),
+				ledPositions: Array.from({ length: 20 }, (_, i) => [9, i]),
+			},
+			{
+				name: "Netflix Curtain Lights IC11",
+				ledCount: 20,
+				size: [1, 20],
+				ledNames: Array.from({ length: 20 }, (_, i) => `Led ${i + 1}`),
+				ledPositions: Array.from({ length: 20 }, (_, i) => [10, i]),
+			},
+			{
+				name: "Netflix Curtain Lights IC12",
+				ledCount: 20,
+				size: [1, 20],
+				ledNames: Array.from({ length: 20 }, (_, i) => `Led ${i + 1}`),
+				ledPositions: Array.from({ length: 20 }, (_, i) => [11, i]),
+			},
+			{
+				name: "Netflix Curtain Lights IC13",
+				ledCount: 20,
+				size: [1, 20],
+				ledNames: Array.from({ length: 20 }, (_, i) => `Led ${i + 1}`),
+				ledPositions: Array.from({ length: 20 }, (_, i) => [12, i]),
+			},
+			{
+				name: "Netflix Curtain Lights IC14",
+				ledCount: 20,
+				size: [1, 20],
+				ledNames: Array.from({ length: 20 }, (_, i) => `Led ${i + 1}`),
+				ledPositions: Array.from({ length: 20 }, (_, i) => [13, i]),
+			},
+			{
+				name: "Netflix Curtain Lights IC15",
+				ledCount: 20,
+				size: [1, 20],
+				ledNames: Array.from({ length: 20 }, (_, i) => `Led ${i + 1}`),
+				ledPositions: Array.from({ length: 20 }, (_, i) => [14, i]),
+			},
+			{
+				name: "Netflix Curtain Lights IC16",
+				ledCount: 20,
+				size: [1, 20],
+				ledNames: Array.from({ length: 20 }, (_, i) => `Led ${i + 1}`),
+				ledPositions: Array.from({ length: 20 }, (_, i) => [15, i]),
+			},
+			{
+				name: "Netflix Curtain Lights IC17",
+				ledCount: 20,
+				size: [1, 20],
+				ledNames: Array.from({ length: 20 }, (_, i) => `Led ${i + 1}`),
+				ledPositions: Array.from({ length: 20 }, (_, i) => [16, i]),
+			},
+			{
+				name: "Netflix Curtain Lights IC18",
+				ledCount: 20,
+				size: [1, 20],
+				ledNames: Array.from({ length: 20 }, (_, i) => `Led ${i + 1}`),
+				ledPositions: Array.from({ length: 20 }, (_, i) => [17, i]),
+			},
+			{
+				name: "Netflix Curtain Lights IC19",
+				ledCount: 20,
+				size: [1, 20],
+				ledNames: Array.from({ length: 20 }, (_, i) => `Led ${i + 1}`),
+				ledPositions: Array.from({ length: 20 }, (_, i) => [18, i]),
+			},
+			{
+				name: "Netflix Curtain Lights IC20",
+				ledCount: 20,
+				size: [1, 20],
+				ledNames: Array.from({ length: 20 }, (_, i) => `Led ${i + 1}`),
+				ledPositions: Array.from({ length: 20 }, (_, i) => [19, i]),
+			},
+		]
 	},
 	H61D5: {
 		name: "RGBIC Neon Lights 2",
@@ -1272,12 +1434,12 @@ const GoveeDeviceLibrary = {
 	},
 	H7075: {
         name: "Govee Outdoor Wall Light, 1500LM",
-        deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h7075.png",
-        sku: "H7075",
-        state: 1,
-        supportRazer: true,
-        supportDreamView: true,
-        ledCount: 10
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h7075.png",
+		sku: "H7075",
+		state: 1,
+		supportRazer: true,
+		supportDreamView: true,
+		ledCount: 10
 	},
 	H606A: {
 		name: "Hex Glide Ultra",
