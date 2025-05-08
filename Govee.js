@@ -1151,5 +1151,23 @@ const GoveeDeviceLibrary = {
 		supportDreamView: true,
 		supportRazer: true,
 		ledCount: 10, // Linked panels that goes up to 21 per controller
-	}
+	},
+	H8022 : {
+		name: "RGBIC Table Lamp",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h8022.png",
+		sku: "H8022",
+		state: 1,
+		supportDreamView: true,
+		supportRazer: true,
+		ledCount: 15
+	},
+	H8072: {
+		name: "RGBIC Floor Lamp",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h8072.png",
+		sku: "H8072",
+		state: 1,
+		supportDreamView: true,
+		supportRazer: true,
+		ledCount: 15
+	},
 };
