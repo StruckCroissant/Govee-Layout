@@ -745,7 +745,7 @@ const GoveeDeviceLibrary = {
 		state: 1,
 		supportDreamView: true,
 		supportRazer: true,
-		ledCount: 10
+		ledCount: 20
 	},
 	H6047: {
 		name: "RGBIC Gaming Light Bars",
