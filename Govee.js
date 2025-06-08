@@ -756,6 +756,15 @@ const GoveeDeviceLibrary = {
 		supportRazer: true,
 		ledCount: 15
 	},
+	H6047: {
+		name: "Ceiling light",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6047.png",
+		sku: "H60A1",
+		state: 1,
+		supportDreamView: true,
+		supportRazer: true,
+		ledCount: 14
+	},
 	H6051: {
 		name: "Table Lamp Lite",
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6052.png",
@@ -881,6 +890,15 @@ const GoveeDeviceLibrary = {
 		supportRazer: false,
 		supportDreamView: false,
 		ledCount: 1
+	},
+	H61B3: {
+		name: "3m RGBIC LED Strip Light with Cover",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61b2.png",
+		sku: "H61B2",
+		state: 1,
+		supportRazer: true,
+		supportDreamView: true,
+		ledCount: 30
 	},
 	H61C2: {
 		name: "RGBIC LED Neon Rope Lights for Desks",
