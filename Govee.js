@@ -974,6 +974,15 @@ const GoveeDeviceLibrary = {
 		supportDreamView: false,
 		ledCount: 1
 	},
+	H61B5: {
+		name: "3m RGBIC Neon TV Backlight",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61b2.png",
+		sku: "H61B5",
+		state: 1,
+		supportRazer: false,
+		supportDreamView: false,
+		ledCount: 15
+	},
 	H61C2: {
 		name: "RGBIC LED Neon Rope Lights for Desks",
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61c2.png",
