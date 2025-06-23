@@ -1308,4 +1308,13 @@ const GoveeDeviceLibrary = {
 		supportDreamView: true,
 		ledCount: 30
 	},
+	H61B3: {
+		name: "3m RGBIC LED Strip Light with Cover",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61b2.png",
+		sku: "H61B3",
+		state: 1,
+		supportRazer: true,
+		supportDreamView: true,
+		ledCount: 30
+	},
 };
