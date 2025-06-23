@@ -1299,4 +1299,13 @@ const GoveeDeviceLibrary = {
 		supportRazer: true,
 		ledCount: 15
 	},
+	H7053: {
+		name: "Outdoor Ground Lights 2",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h7053.png",
+		sku: "H7053",
+		state: 1,
+		supportRazer: false,
+		supportDreamView: true,
+		ledCount: 30
+	},
 };
