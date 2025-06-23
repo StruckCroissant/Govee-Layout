@@ -15,9 +15,9 @@ forcedColor:readonly
 */
 export function ControllableParameters() {
 	return [
-		{"property":"TurnOffOnShutdown", "group":"settings", "label":"Turn off on App Exit", "type":"boolean", "default":"false"},
-		{"property":"LightingMode", "group":"lighting", "label":"Lighting Mode", "type":"combobox", "values":["Canvas", "Forced"], "default":"Canvas"},
-		{"property":"forcedColor", "group":"lighting", "label":"Forced Color", "min":"0", "max":"360", "type":"color", "default":"#009bde"},
+		{property:"TurnOffOnShutdown", group:"settings", label:"Turn off on App Exit", description: "", type:"boolean", default:"false"},
+		{property:"LightingMode", group:"lighting", label:"Lighting Mode", description: "Determines where the device's RGB comes from. Canvas will pull from the active Effect, while Forced will override it to a specific color", type:"combobox", values:["Canvas", "Forced"], default:"Canvas"},
+		{property:"forcedColor", group:"lighting", label:"Forced Color", description: "The color used when 'Forced' Lighting Mode is enabled", min:"0", max:"360", type:"color", default:"#009bde"},
 	];
 }
 
@@ -766,8 +766,8 @@ const GoveeDeviceLibrary = {
 		sku: "H610A",
 		state: 1,
 		supportRazer: false,
-		supportDreamView: false,
-		ledCount: 1
+		supportDreamView: true,
+		ledCount: 24
 	},
 	H610B: {
 		name: "Glide Music Wall Light",
@@ -1001,6 +1001,15 @@ const GoveeDeviceLibrary = {
 		supportDreamView: true,
 		ledCount: 16
 	},
+	H61C5: {
+		name: "RGBIC LED Neon Rope Lights for Desks",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61c2.png",
+		sku: "H61C5",
+		state: 1,
+		supportDreamView: true,
+		supportRazer: true,
+		ledCount: 15
+	},
 	H61E0: {
 		name: "LED Strip Light M1",
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61e0.png",
@@ -1119,6 +1128,15 @@ const GoveeDeviceLibrary = {
 		supportDreamView: false,
 		ledCount: 1
 	},
+	H615D: {
+		name: "15m RGB Strip Light",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h615a.png",
+		sku: "H615D",
+		state: 1,
+		supportRazer: false,
+		supportDreamView: false,
+		ledCount: 1
+	},
 	H618F: {
 		name: "2*15m RGBIC LED Strip Light",
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h618a.png",
@@ -1209,6 +1227,15 @@ const GoveeDeviceLibrary = {
 		supportDreamView: true,
 		ledCount: 7
 	},
+	H6167: {
+		name: "RGBIC TV Light Bars",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6168.png",
+		sku: "H6167",
+		state: 1,
+		supportDreamView: true,
+		supportRazer: true,
+		ledCount: 10
+	},
 	H6168: {
 		name: "RGBIC TV Light Bars",
 		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h6168.png",
@@ -1253,5 +1280,23 @@ const GoveeDeviceLibrary = {
 		supportDreamView: true,
 		ledCount: 10, // Linked panels that goes up to 21 per controller
 		hasVariableLedCount: true
-	}
+	},
+	H8022 : {
+		name: "RGBIC Table Lamp",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h8022.png",
+		sku: "H8022",
+		state: 1,
+		supportDreamView: true,
+		supportRazer: true,
+		ledCount: 15
+	},
+	H8072: {
+		name: "RGBIC Floor Lamp",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h8072.png",
+		sku: "H8072",
+		state: 1,
+		supportDreamView: true,
+		supportRazer: true,
+		ledCount: 15
+	},
 };
