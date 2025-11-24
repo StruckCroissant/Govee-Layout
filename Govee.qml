@@ -46,144 +46,200 @@ Item {
 			}
 		}    
     
-         Pane {
-                width: 352
-                height: 136
-                padding: 8
-
-                background: Rectangle {
-                    color: theme.background2
-                    radius: 8
-                }
-
-                ColumnLayout {
-                    spacing: 4
-                    anchors.fill: parent
-
-                    Text{
-				        color: "White"
-				        text: "Manually Specify IP Address" 
-				        font.family: theme.primaryfont
-                        font.weight: Font.Bold
-                        font.pixelSize: 16
-                    }
-
-                    TextField {
-
-                        Layout.preferredWidth: 334
-			        	id: discoverIP
-			        	color: theme.secondarytextcolor
-			        	font.family: theme.secondaryfont
-
-			        	validator: RegularExpressionValidator {
-			        	    regularExpression:  /^((?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.){0,3}(?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])$/
-			        	}
-                        
-                        onEditingFinished: {
-			    			discovery.checkCachedDevice(discoverIP.text);
-			    		}
-
-                        background: Rectangle {
-                            color: theme.background3
-                            radius: 4
-                        }
-			        }
-
-                    SButton{
-                        Layout.alignment: Qt.AlignRight
-                        color: hovered ? Qt.darker("#531B1B", 1.5) : "#531B1B"
-                        label.font.pixelSize: 16
-                        label.text: "Clear IP Cache"
-
-                        onClicked : {
-                            cacheBurnBox.visible = true
-                        }
-                    }
-
-                }
-            }
-
-        Repeater{
-            model: service.controllers          
-
-            delegate: Pane {
-            id: root
-            width: 352 // set Width
-            height: contentHeight + padding * 2// dynamic height based on content
-            padding: 12
+        Pane {
+            width: 352
+            height: 136
+            padding: 8
 
             background: Rectangle {
                 color: theme.background2
                 radius: 8
             }
-            property var device: model.modelData.obj
 
-            property bool isExpanded: false // Use bool, int, real, etc over var for better performance
-
-            ColumnLayout{
-                width: parent.width
+            ColumnLayout {
                 spacing: 4
+                anchors.fill: parent
 
-                Item{
-                    width: parent.width
-                    height: 20
+                Text{
+                    color: "White"
+                    text: "Manually Specify IP Address" 
+                    font.family: theme.primaryfont
+                    font.weight: Font.Bold
+                    font.pixelSize: 16
+                }
 
-                    Text{
-                        id: deviceName
-                        color: theme.primarytextcolor
-                        text: root.device.name
-                        font.pixelSize: 16
-                        font.family: theme.primaryfont
-                        font.weight: Font.Bold
-                        verticalAlignment: Text.AlignVCenter
+                TextField {
+
+                    Layout.preferredWidth: 334
+                    id: discoverIP
+                    color: theme.secondarytextcolor
+                    font.family: theme.secondaryfont
+
+                    validator: RegularExpressionValidator {
+                        regularExpression:  /^((?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.){0,3}(?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])$/
+                    }
+                    
+                    onEditingFinished: {
+                        discovery.checkCachedDevice(discoverIP.text);
                     }
 
-                    SIconButton{
-                        id: expandButton
-                        width: 24
-                        height: 24
-                        iconSize: height
-                        anchors.right: parent.right
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        icon.source: "qrc:/icons/Resources/Icons/Icons_Onboarding_Icon.svg"
-
-                      onClicked: {
-                          root.isExpanded = !root.isExpanded
-
-                       }
+                    background: Rectangle {
+                        color: theme.background3
+                        radius: 4
                     }
                 }
 
-                Text{
-                    color: theme.secondarytextcolor
-                    text: "IP Address: " + root.device.ip ?? "Unknown"
+                SButton{
+                    Layout.alignment: Qt.AlignRight
+                    color: hovered ? Qt.darker("#531B1B", 1.5) : "#531B1B"
+                    label.font.pixelSize: 16
+                    label.text: "Clear IP Cache"
+
+                    onClicked : {
+                        cacheBurnBox.visible = true
+                    }
                 }
 
-
-                Text{
-                    color: theme.secondarytextcolor
-                    text: `Id: ${root.device.id} | SKU: ${root.device.sku}`
-                }
-
-                Text{
-                    visible: root.isExpanded
-                    color: theme.secondarytextcolor
-                    text: "Wifi Version: "+ root.device.wifiVersionSoft
-                }
-
-                Text{
-                    visible: root.isExpanded
-                    color: theme.secondarytextcolor
-                    text: `Supports DreamView Protocol: ${root.device.supportDreamView  ? "True" : "False"}`
-                }
-
-                Text{
-                    visible: root.isExpanded
-                    color: theme.secondarytextcolor
-                    text: `Supports Razer Protocol: ${root.device.supportRazer ? "True" : "False"}`
-                }
             }
+        }
+
+        Repeater{
+            model: service.controllers
+
+            delegate: Pane {
+                id: root
+                width: 352 // set Width
+                height: (contentHeight + padding * 2) + 30// dynamic height based on content
+                padding: 12
+
+                background: Rectangle {
+                    color: theme.background2
+                    radius: 8
+                    border.color: "#18232e"
+                    border.width: 3
+                }
+
+                property var device: model.modelData.obj
+
+                ColumnLayout{
+                    width: parent.width
+                    spacing: 4
+
+                    Item{
+                        width: 80
+                        height: 80
+
+                        Image {
+                            x: 10
+                            y: 6
+                            width: 80
+                            height: 80
+                            source: root.device.deviceImage
+                            fillMode: Image.PreserveAspectFit
+                            antialiasing: false
+                            mipmap: false
+                        }
+
+                        Text{
+                            x: 110
+                            y: 6
+                            id: deviceName
+                            color: theme.primarytextcolor
+                            text: root.device.name
+                            font.pixelSize: 18
+                            font.family: theme.primaryfont
+                            font.weight: Font.Bold
+                            verticalAlignment: Text.AlignVCenter
+                        }
+
+                        Text{
+                            x: 110
+                            y: 26
+                            font.pixelSize: 12
+                            font.family: "Poppins"
+                            verticalAlignment: Text.AlignVCenter
+                            color: theme.secondarytextcolor
+                            text: `ID: ${root.device.id}`
+                        }
+
+                        Text{
+                            x: 110
+                            y: 42
+                            font.pixelSize: 12
+                            font.family: "Poppins"
+                            verticalAlignment: Text.AlignVCenter
+                            color: theme.secondarytextcolor
+                            text: `Model: ${root.device.sku}`
+                        }
+
+                        Text{
+                            x: 110
+                            y: 56
+                            font.pixelSize: 12
+                            font.family: "Poppins"
+                            verticalAlignment: Text.AlignVCenter
+                            color: theme.secondarytextcolor
+                            text: "IP Address: " + root.device.ip ?? "Unknown"
+                        }
+
+                        SIconButton{
+                            x: 300
+                            y: 6
+                            id: removeButton
+                            width: 24
+                            height: 24
+                            iconSize: height
+                            
+                            icon.source: "qrc:/icons/Resources/Icons/Material/close_white_48dp.svg"
+
+                            onClicked: {
+                                discovery.remove(root.device);
+                            }
+                        }
+
+                        SButton {
+                            id: deviceStatus
+
+                            color: (root.device.paired === true) ? "#3db049" : "#212d3b"
+
+                            label.font.pixelSize: 12
+                            label.text: (root.device.paired === true) ? "Linked" : "Not Linked"
+                            label.font.family: "Poppins"
+                            label.font.bold: false
+                            
+                            anchors.top: parent.bottom
+
+                            width: 100
+                            height: 32
+                        }
+
+                        SButton {
+                            id: deviceLink
+
+                            color: (root.device.paired === true) ? hovered ? Qt.darker("#531B1B", 1.5) : "#531B1B" : hovered ? Qt.darker("#5664b1", 1.5) : "#5664b1"
+
+                            label.font.pixelSize: 16
+                            label.text: (root.device.paired === true) ? "Unlink" : "Link"
+                            label.font.family: "Poppins"
+                            label.font.bold: true
+
+                            anchors.top: parent.bottom
+                            anchors.left: deviceStatus.right
+                            anchors.leftMargin: 5
+
+                            width: 225
+                            height: 32
+ 
+                            onClicked: {
+                                if(root.device.paired === true){
+                                    discovery.unlink(root.device);
+                                }else {
+                                    discovery.link(root.device);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
