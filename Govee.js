@@ -15,7 +15,7 @@ forcedColor:readonly
 export function ControllableParameters() {
 	return [
 		{property:"protocolSelect", group:"settings", label:"Protocol", description: "Determines which protocol will be used to control the device. (Not all protocols works on a device)", type:"combobox", values:["DreamviewV1", "DreamviewV2", "RazerV1", "RazerV2", "Static"], default:"DreamviewV1"},
-		{property:"TurnOffOnShutdown", group:"settings", label:"Turn off on App Exit", description: "", type:"boolean", default:"false"},
+		{property:"TurnOffOnShutdown", group:"settings", label:"Turn off on unlink process", description: "This turns off the device during unlink process or shutdown of the app", type:"boolean", default:"false"},
 		{property:"LightingMode", group:"lighting", label:"Lighting Mode", description: "Determines where the device's RGB comes from. Canvas will pull from the active Effect, while Forced will override it to a specific color", type:"combobox", values:["Canvas", "Forced"], default:"Canvas"},
 		{property:"forcedColor", group:"lighting", label:"Forced Color", description: "The color used when 'Forced' Lighting Mode is enabled", min:"0", max:"360", type:"color", default:"#009bde"},
 	];
@@ -23,9 +23,6 @@ export function ControllableParameters() {
 
 /** @type {GoveeProtocol} */
 let govee;
-let ledCount = 4;
-let ledNames = [];
-let ledPositions = [];
 
 export function Initialize(){
 	device.addFeature("base64");
@@ -60,7 +57,7 @@ export function Render(){
 	device.pause(10);
 }
 
-export function Shutdown(suspend){
+export function Shutdown(SystemSuspending){
 	govee.SetRazerMode(false);
 
 	if(TurnOffOnShutdown){
@@ -85,6 +82,7 @@ function fetchDeviceInfoFromTableAndConfigure() {
 
 }
 
+// -------------------------------------------<( Discovery Service )>--------------------------------------------------
 let UDPServer;
 
 export function DiscoveryService() {
@@ -306,7 +304,6 @@ export function DiscoveryService() {
 	};
 
 	this.link = function(controllerObj){
-
 		service.log(`Linking controller: ${controllerObj.id} - Paired: ${controllerObj.paired} `);
 
 		const cachedController = this.cache.Get(controllerObj.id)

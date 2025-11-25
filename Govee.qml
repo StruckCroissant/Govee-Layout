@@ -131,7 +131,7 @@ Item {
 
                         Image {
                             x: 10
-                            y: 6
+                            y: 0
                             width: 80
                             height: 80
                             source: root.device.deviceImage
@@ -142,7 +142,7 @@ Item {
 
                         Text{
                             x: 110
-                            y: 6
+                            y: 0
                             id: deviceName
                             color: theme.primarytextcolor
                             text: root.device.name
@@ -156,7 +156,7 @@ Item {
                             x: 110
                             y: 26
                             font.pixelSize: 12
-                            font.family: "Poppins"
+                            font.family: "Montserrat Regular"
                             verticalAlignment: Text.AlignVCenter
                             color: theme.secondarytextcolor
                             text: `ID: ${root.device.id}`
@@ -164,9 +164,9 @@ Item {
 
                         Text{
                             x: 110
-                            y: 42
+                            y: 40
                             font.pixelSize: 12
-                            font.family: "Poppins"
+                            font.family: "Montserrat Regular"
                             verticalAlignment: Text.AlignVCenter
                             color: theme.secondarytextcolor
                             text: `Model: ${root.device.sku}`
@@ -176,7 +176,7 @@ Item {
                             x: 110
                             y: 56
                             font.pixelSize: 12
-                            font.family: "Poppins"
+                            font.family: "Montserrat Regular"
                             verticalAlignment: Text.AlignVCenter
                             color: theme.secondarytextcolor
                             text: "IP Address: " + root.device.ip ?? "Unknown"
@@ -202,10 +202,10 @@ Item {
 
                             color: (root.device.paired === true) ? "#3db049" : "#212d3b"
 
-                            label.font.pixelSize: 12
+                            label.font.pixelSize: 14
                             label.text: (root.device.paired === true) ? "Linked" : "Not Linked"
-                            label.font.family: "Poppins"
-                            label.font.bold: false
+                            label.font.family: "Red Hat Display"
+                            label.font.bold: true
                             
                             anchors.top: parent.bottom
 
@@ -220,7 +220,7 @@ Item {
 
                             label.font.pixelSize: 16
                             label.text: (root.device.paired === true) ? "Unlink" : "Link"
-                            label.font.family: "Poppins"
+                            label.font.family: "Red Hat Display"
                             label.font.bold: true
 
                             anchors.top: parent.bottom
