@@ -113,7 +113,8 @@ Item {
                 padding: 12
 
                 background: Rectangle {
-                    color: theme.background2
+                    //color: theme.background2
+                    color: "#070d16"
                     radius: 8
                     border.color: "#18232e"
                     border.width: 3
@@ -126,22 +127,20 @@ Item {
                     spacing: 4
 
                     Item{
-                        width: 80
                         height: 80
 
                         Image {
                             x: 10
                             y: 0
-                            width: 80
-                            height: 80
+                            width: 120
+                            height: 120
                             source: root.device.deviceImage
-                            fillMode: Image.PreserveAspectFit
                             antialiasing: false
                             mipmap: false
                         }
 
                         Text{
-                            x: 110
+                            x: 140
                             y: 0
                             id: deviceName
                             color: theme.primarytextcolor
@@ -153,7 +152,7 @@ Item {
                         }
 
                         Text{
-                            x: 110
+                            x: 140
                             y: 26
                             font.pixelSize: 12
                             font.family: "Montserrat Regular"
@@ -163,8 +162,8 @@ Item {
                         }
 
                         Text{
-                            x: 110
-                            y: 40
+                            x: 140
+                            y: 42
                             font.pixelSize: 12
                             font.family: "Montserrat Regular"
                             verticalAlignment: Text.AlignVCenter
@@ -173,8 +172,8 @@ Item {
                         }
 
                         Text{
-                            x: 110
-                            y: 56
+                            x: 140
+                            y: 58
                             font.pixelSize: 12
                             font.family: "Montserrat Regular"
                             verticalAlignment: Text.AlignVCenter
@@ -184,7 +183,7 @@ Item {
 
                         SIconButton{
                             x: 300
-                            y: 6
+                            y: 0
                             id: removeButton
                             width: 24
                             height: 24
@@ -198,36 +197,18 @@ Item {
                         }
 
                         SButton {
-                            id: deviceStatus
-
-                            color: (root.device.paired === true) ? "#3db049" : "#212d3b"
-
-                            label.font.pixelSize: 14
-                            label.text: (root.device.paired === true) ? "Linked" : "Not Linked"
-                            label.font.family: "Red Hat Display"
-                            label.font.bold: true
-                            
-                            anchors.top: parent.bottom
-
-                            width: 100
-                            height: 32
-                        }
-
-                        SButton {
                             id: deviceLink
+                            x: 140
+                            y: 80
 
-                            color: (root.device.paired === true) ? hovered ? Qt.darker("#531B1B", 1.5) : "#531B1B" : hovered ? Qt.darker("#5664b1", 1.5) : "#5664b1"
+                            color: (root.device.paired === true) ? hovered ? Qt.darker("#394e61", 1.5) : "#394e61" : hovered ? Qt.darker("#5664b1", 1.5) : "#5664b1"
 
                             label.font.pixelSize: 16
                             label.text: (root.device.paired === true) ? "Unlink" : "Link"
                             label.font.family: "Red Hat Display"
                             label.font.bold: true
 
-                            anchors.top: parent.bottom
-                            anchors.left: deviceStatus.right
-                            anchors.leftMargin: 5
-
-                            width: 225
+                            width: 190
                             height: 32
  
                             onClicked: {
