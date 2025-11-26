@@ -91,7 +91,6 @@ export function DiscoveryService() {
 
 	this.Initialize = function(){
 		service.log("Searching for Govee network devices...");
-		this.LoadCachedDevices();
 	};
 
 	this.UdpBroadcastPort = 4001;
@@ -235,6 +234,12 @@ export function DiscoveryService() {
 	};
 
 	this.Update = function(){
+
+		if(this.firstRun){
+			this.LoadCachedDevices();
+			this.firstRun = false;
+		}
+
 		for(const cont of service.controllers){
 			cont.obj.update();
 		}
