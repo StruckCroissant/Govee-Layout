@@ -188,7 +188,7 @@ export function DiscoveryService() {
 			const isValid = response.msg.data.hasOwnProperty("ip");
 
 			if(!isValid){
-				service.log(`Potential Govee device ${response.msg.data.sku} found at ${value.ip} discarded since it's missing an IP field.`);
+				service.log(`Potential Govee device ${response.msg.data.sku} found at ${value.ip} discarded since it's missing an IP field from Govee firmware.`);
 				service.log(response.msg.data)
 				return;
 			}
@@ -220,7 +220,7 @@ export function DiscoveryService() {
 			const isValid = response.msg.data.hasOwnProperty("ip");
 
 			if(!isValid){
-				service.log(`Potential Govee device ${response.msg.data.sku} found at ${value.ip} discarded since it's missing an IP field.`);
+				service.log(`Potential Govee device ${response.msg.data.sku} found at ${value.ip} discarded since it's missing an IP field from Govee firmware.`);
 				service.log(response.msg.data)
 				return;
 			}
