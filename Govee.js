@@ -188,7 +188,7 @@ export function DiscoveryService() {
 			const isValid = response.msg.data.hasOwnProperty("ip");
 
 			if(!isValid){
-				service.log(`Potential Govee device ${response.msg.data.sku} found at ${value.ip} discarded since it's missing an IP field from Govee firmware.`);
+				service.log(`Potential Govee device ${response.msg.data.sku} found at ${value.ip} discarded since it's missing an IP field.`);
 				service.log(response.msg.data)
 				return;
 			}
@@ -220,7 +220,7 @@ export function DiscoveryService() {
 			const isValid = response.msg.data.hasOwnProperty("ip");
 
 			if(!isValid){
-				service.log(`Potential Govee device ${response.msg.data.sku} found at ${value.ip} discarded since it's missing an IP field from Govee firmware.`);
+				service.log(`Potential Govee device ${response.msg.data.sku} found at ${value.ip} discarded since it's missing an IP field.`);
 				service.log(response.msg.data)
 				return;
 			}
@@ -1494,5 +1494,41 @@ const GoveeDeviceLibrary = {
 		supportRazer: true,
 		supportDreamView: true,
 		ledCount: 30
+	},
+	H7039: {
+		name: "Smart Outdoor String Lights 2",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h7039.png",
+		sku: "H7039",
+		state: 1,
+		supportRazer: true,
+		supportDreamView: true,
+		ledCount: 45
+	},
+	H60A1: {
+		name: "Smart Ceiling Light",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h60a1.png",
+		sku: "H60A1",
+		state: 1,
+		supportRazer: true,
+		supportDreamView: true,
+		ledCount: 13
+	},
+	H702A: {
+		name: "S14 Bulb Outdoor String Lights 2",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h702a.png",
+		sku: "H702A",
+		state: 1,
+		supportRazer: true,
+		supportDreamView: true,
+		ledCount: 15
+	},
+	H61E6: {
+		name: "COB LED Strip Light Pro",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h61e6.png",
+		sku: "H61E6",
+		state: 1,
+		supportRazer: true,
+		supportDreamView: true,
+		ledCount: 60
 	},
 };
