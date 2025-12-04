@@ -7,57 +7,21 @@ Item {
         width: parent.width
         height: parent.height
         spacing: 10
-
-		Rectangle{
-			id: scanningItem
-			height: 50
-			width: 350
-			visible: service.controllers.length === 0
-			color: theme.background2
-			radius: theme.radius
-
-			BusyIndicator {
-				id: scanningIndicator
-				height: 30
-				anchors.verticalCenter: parent.verticalCenter
-				width: parent.height
-				Material.accent: "#88FFFFFF"
-				running: scanningItem.visible
-			}  
-
-			Column{
-				width: childrenRect.width
-				anchors.left: scanningIndicator.right
-				anchors.verticalCenter: parent.verticalCenter
-
-				Text{
-					color: "White"
-					text: "Searching network for Govee Devices..." 
-					font.pixelSize: 14
-					font.family: theme.secondaryfont
-				}
-				Text{
-					color: "White"
-					text: "This may take several minutes..." 
-					font.pixelSize: 14
-					font.family: theme.secondaryfont
-				}
-
-			}
-		}    
     
         Pane {
             width: 352
-            height: 136
-            padding: 8
+            height: (contentHeight + padding * 2)
+            padding: 14
 
             background: Rectangle {
-                color: theme.background2
+                color: "#070d16"
                 radius: 8
+                border.color: "#18232e"
+                border.width: 1.5
             }
 
             ColumnLayout {
-                spacing: 4
+                spacing: 8
                 anchors.fill: parent
 
                 Text{
@@ -65,12 +29,11 @@ Item {
                     text: "Manually Specify IP Address" 
                     font.family: theme.primaryfont
                     font.weight: Font.Bold
-                    font.pixelSize: 16
+                    font.pixelSize: 20
                 }
 
                 TextField {
-
-                    Layout.preferredWidth: 334
+                    Layout.preferredWidth: parent.width
                     id: discoverIP
                     color: theme.secondarytextcolor
                     font.family: theme.secondaryfont
@@ -89,17 +52,58 @@ Item {
                     }
                 }
 
-                SButton{
-                    Layout.alignment: Qt.AlignRight
-                    color: hovered ? Qt.darker("#531B1B", 1.5) : "#531B1B"
-                    label.font.pixelSize: 16
-                    label.text: "Clear IP Cache"
+                Item {
+                    SButton{
+                        id: cacheButton
+                        width: 156
 
-                    onClicked : {
-                        cacheBurnBox.visible = true
+                        color: hovered ? Qt.darker("#304152", 1.5) : "#304152"
+
+                        label.font.pixelSize: 16
+                        label.font.family: "Red Hat Display"
+                        label.font.bold: true
+                        label.text: "Clear IP Cache"
+
+                        onClicked : {
+                            cacheBurnBox.visible = true
+                        }
+                    }
+
+                    SButton{
+                        width: 156
+                        anchors.left: cacheButton.right
+                        anchors.leftMargin: 10
+
+                        color: hovered ? Qt.darker("#5664b1", 1.5) : "#5664b1"
+
+                        label.font.pixelSize: 16
+                        label.font.family: "Red Hat Display"
+                        label.font.bold: true
+                        label.text: "Check IP"
+
+                        onClicked : {
+                            discovery.checkCachedDevice(discoverIP.text);
+                        }
                     }
                 }
 
+                BusyIndicator {
+                    anchors.bottom: parent.bottom
+                    id: scanningIndicator
+                    Material.accent: "#88FFFFFF"
+                    running: true
+                    implicitWidth: 40
+                    implicitHeight: 40
+                }  
+
+                Text{
+                    anchors.left: scanningIndicator.right
+                    verticalAlignment: Text.AlignVCenter
+                    color: "#88FFFFFF"
+                    text: "Searching network for devices. \nThis may take several minutes..." 
+                    font.pixelSize: 14
+                    font.family: "Red Hat Display"
+                }
             }
         }
 
@@ -113,7 +117,6 @@ Item {
                 padding: 12
 
                 background: Rectangle {
-                    //color: theme.background2
                     color: "#070d16"
                     radius: 8
                     border.color: "#18232e"
