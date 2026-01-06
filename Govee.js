@@ -1532,4 +1532,13 @@ const GoveeDeviceLibrary = {
 		supportDreamView: true,
 		ledCount: 60
 	},
+	H612C: {
+		name: " RGBIC LED Strip Lights With Protective Coating",
+		deviceImage: "https://assets.signalrgb.com/devices/brands/govee/wifi/h612c.png",
+		sku: "H612C",
+		state: 1,
+		supportRazer: false,
+		supportDreamView: true,
+		ledCount: 60
+	},
 };
