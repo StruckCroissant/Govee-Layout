@@ -274,10 +274,8 @@ export function DiscoveryService() {
 			this.cache.Remove(controllerObj.id)
 			
 			service.log(`Removing controller: ${controllerObj.id}`);
+			service.suppressController(controllerObj);
 			service.removeController(controllerObj);
-
-			const cachedDevices = this.cache.Entries()
-			console.log(cachedDevices);
 		} else {
 			this.cache.PurgeCache();
 			const cachedDevices = this.cache.Entries()
@@ -285,6 +283,7 @@ export function DiscoveryService() {
 	
 			for(const [key, value] of cachedDevices){
 				service.log(`Removing Cached Device: [${key}: ${JSON.stringify(value)}]`);
+				service.suppressController(value);
 				service.removeController(value);
 			}
 
@@ -628,7 +627,9 @@ class GoveeProtocol {
 		let RGBData = [];
 		let packet  = [];
 
-		if(LightingMode === "Forced"){
+		if(overrideColor) {
+			RGBData = device.createColorArray(overrideColor, ChannelLedCount, "Inline");
+		}else if(LightingMode === "Forced"){
 			RGBData = device.createColorArray(forcedColor, ChannelLedCount, "Inline");
 		}else if(componentChannel.shouldPulseColors()){
 			const pulseColor = device.getChannelPulseColor(`Channel 1`);
