@@ -1539,6 +1539,6 @@ const GoveeDeviceLibrary = {
 		state: 1,
 		supportRazer: false,
 		supportDreamView: true,
-		ledCount: 60
+		ledCount: 20
 	},
 };
