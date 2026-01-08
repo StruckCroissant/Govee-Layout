@@ -6,12 +6,11 @@ Item {
     Column{
         width: parent.width
         height: parent.height
-        spacing: 10
+        spacing: 2
     
         Pane {
-            width: 352
-            height: (contentHeight + padding * 2)
-            padding: 14
+            width: parent.width
+            height: (contentHeight + padding * 2) + 30
 
             background: Rectangle {
                 color: "#070d16"
@@ -20,11 +19,18 @@ Item {
                 border.width: 1.5
             }
 
-            ColumnLayout {
-                spacing: 8
+            GridLayout {
+                id: grid
                 anchors.fill: parent
+                columns: 3
+                rowSpacing: 2
+                columnSpacing: 2
 
                 Text{
+                    Layout.row: 0
+                    Layout.column: 0
+                    Layout.columnSpan: 3
+                    Layout.fillWidth: true
                     color: "White"
                     text: "Manually Specify IP Address" 
                     font.family: theme.primaryfont
@@ -33,7 +39,11 @@ Item {
                 }
 
                 TextField {
-                    Layout.preferredWidth: parent.width
+                    Layout.row: 1
+                    Layout.column: 0
+                    Layout.fillWidth: false
+                    Layout.preferredWidth: 323
+
                     id: discoverIP
                     color: theme.secondarytextcolor
                     font.family: theme.secondaryfont
@@ -53,6 +63,10 @@ Item {
                 }
 
                 Item {
+                    Layout.row: 2
+                    Layout.column: 0
+                    Layout.fillWidth: true
+
                     SButton{
                         id: cacheButton
                         width: 156
@@ -70,6 +84,7 @@ Item {
                     }
 
                     SButton{
+                        id: checkButton
                         width: 156
                         anchors.left: cacheButton.right
                         anchors.leftMargin: 10
@@ -88,8 +103,15 @@ Item {
                 }
 
                 BusyIndicator {
-                    anchors.bottom: parent.bottom
                     id: scanningIndicator
+                    anchors.left: checkButton.right
+                    anchors.leftMargin: 10
+
+                    Layout.row: 2
+                    Layout.column: 1
+                    Layout.columnSpan: 1
+                    Layout.fillWidth: true
+                    
                     Material.accent: "#88FFFFFF"
                     running: true
                     implicitWidth: 40
@@ -97,7 +119,15 @@ Item {
                 }  
 
                 Text{
+                    id: scanningText
                     anchors.left: scanningIndicator.right
+                    anchors.leftMargin: 10
+
+                    Layout.row: 2
+                    Layout.column: 2
+                    Layout.columnSpan: 1
+                    Layout.fillWidth: true
+
                     verticalAlignment: Text.AlignVCenter
                     color: "#88FFFFFF"
                     text: "Searching network for devices. \nThis may take several minutes..." 
