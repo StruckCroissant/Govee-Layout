@@ -620,7 +620,7 @@ class GoveeProtocol {
 		}));
 	}
 
-	SendRGB() {
+	SendRGB(overrideColor) {
 		const ChannelLedCount = device.channel(`Channel 1`).LedCount();
 		const componentChannel = device.channel(`Channel 1`);
 
