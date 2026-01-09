@@ -137,118 +137,131 @@ Item {
             }
         }
 
-        Repeater{
-            model: service.controllers
+        ScrollView {
+            width: parent.width
+            height: parent.height - y
+            clip: true
+            ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
 
-            delegate: Pane {
-                id: root
-                width: 352 // set Width
-                height: (contentHeight + padding * 2) + 30// dynamic height based on content
-                padding: 12
+            Grid {
+                width: parent.parent.width
+                columns: Math.max(1, Math.floor(width / 362)) // 352 + 10 for spacing
+                spacing: 10
 
-                background: Rectangle {
-                    color: "#070d16"
-                    radius: 8
-                    border.color: "#18232e"
-                    border.width: 3
-                }
+                Repeater{
+                    model: service.controllers
 
-                property var device: model.modelData.obj
+                    delegate: Pane {
+                        id: root
+                        width: 352 // set Width
+                        height: (contentHeight + padding * 2) + 30// dynamic height based on content
+                        padding: 12
 
-                ColumnLayout{
-                    width: parent.width
-                    spacing: 4
-
-                    Item{
-                        height: 80
-
-                        Image {
-                            x: 10
-                            y: 0
-                            width: 120
-                            height: 120
-                            source: root.device.deviceImage
-                            antialiasing: false
-                            mipmap: false
+                        background: Rectangle {
+                            color: "#070d16"
+                            radius: 8
+                            border.color: "#18232e"
+                            border.width: 3
                         }
 
-                        Text{
-                            x: 140
-                            y: 0
-                            id: deviceName
-                            color: theme.primarytextcolor
-                            text: root.device.name
-                            font.pixelSize: 18
-                            font.family: theme.primaryfont
-                            font.weight: Font.Bold
-                            verticalAlignment: Text.AlignVCenter
-                        }
+                        property var device: model.modelData.obj
 
-                        Text{
-                            x: 140
-                            y: 26
-                            font.pixelSize: 12
-                            font.family: "Montserrat Regular"
-                            verticalAlignment: Text.AlignVCenter
-                            color: theme.secondarytextcolor
-                            text: `ID: ${root.device.id}`
-                        }
+                        ColumnLayout{
+                            width: parent.width
+                            spacing: 4
 
-                        Text{
-                            x: 140
-                            y: 42
-                            font.pixelSize: 12
-                            font.family: "Montserrat Regular"
-                            verticalAlignment: Text.AlignVCenter
-                            color: theme.secondarytextcolor
-                            text: `Model: ${root.device.sku}`
-                        }
+                            Item{
+                                height: 80
 
-                        Text{
-                            x: 140
-                            y: 58
-                            font.pixelSize: 12
-                            font.family: "Montserrat Regular"
-                            verticalAlignment: Text.AlignVCenter
-                            color: theme.secondarytextcolor
-                            text: "IP Address: " + root.device.ip ?? "Unknown"
-                        }
+                                Image {
+                                    x: 10
+                                    y: 0
+                                    width: 120
+                                    height: 120
+                                    source: root.device.deviceImage
+                                    antialiasing: false
+                                    mipmap: false
+                                }
 
-                        SIconButton{
-                            x: 300
-                            y: 0
-                            id: removeButton
-                            width: 24
-                            height: 24
-                            iconSize: height
-                            
-                            icon.source: "qrc:/icons/Resources/Icons/Material/close_white_48dp.svg"
+                                Text{
+                                    x: 140
+                                    y: 0
+                                    id: deviceName
+                                    color: theme.primarytextcolor
+                                    text: root.device.name
+                                    font.pixelSize: 18
+                                    font.family: theme.primaryfont
+                                    font.weight: Font.Bold
+                                    verticalAlignment: Text.AlignVCenter
+                                }
 
-                            onClicked: {
-                                discovery.remove(root.device);
-                            }
-                        }
+                                Text{
+                                    x: 140
+                                    y: 26
+                                    font.pixelSize: 12
+                                    font.family: "Montserrat Regular"
+                                    verticalAlignment: Text.AlignVCenter
+                                    color: theme.secondarytextcolor
+                                    text: `ID: ${root.device.id}`
+                                }
 
-                        SButton {
-                            id: deviceLink
-                            x: 140
-                            y: 80
+                                Text{
+                                    x: 140
+                                    y: 42
+                                    font.pixelSize: 12
+                                    font.family: "Montserrat Regular"
+                                    verticalAlignment: Text.AlignVCenter
+                                    color: theme.secondarytextcolor
+                                    text: `Model: ${root.device.sku}`
+                                }
 
-                            color: (root.device.paired === true) ? hovered ? Qt.darker("#394e61", 1.5) : "#394e61" : hovered ? Qt.darker("#5664b1", 1.5) : "#5664b1"
+                                Text{
+                                    x: 140
+                                    y: 58
+                                    font.pixelSize: 12
+                                    font.family: "Montserrat Regular"
+                                    verticalAlignment: Text.AlignVCenter
+                                    color: theme.secondarytextcolor
+                                    text: "IP Address: " + root.device.ip ?? "Unknown"
+                                }
 
-                            label.font.pixelSize: 16
-                            label.text: (root.device.paired === true) ? "Unlink" : "Link"
-                            label.font.family: "Red Hat Display"
-                            label.font.bold: true
+                                SIconButton{
+                                    x: 300
+                                    y: 0
+                                    id: removeButton
+                                    width: 24
+                                    height: 24
+                                    iconSize: height
+                                    
+                                    icon.source: "qrc:/icons/Resources/Icons/Material/close_white_48dp.svg"
 
-                            width: 190
-                            height: 32
- 
-                            onClicked: {
-                                if(root.device.paired === true){
-                                    discovery.unlink(root.device);
-                                }else {
-                                    discovery.link(root.device);
+                                    onClicked: {
+                                        discovery.remove(root.device);
+                                    }
+                                }
+
+                                SButton {
+                                    id: deviceLink
+                                    x: 140
+                                    y: 80
+
+                                    color: (root.device.paired === true) ? hovered ? Qt.darker("#394e61", 1.5) : "#394e61" : hovered ? Qt.darker("#5664b1", 1.5) : "#5664b1"
+
+                                    label.font.pixelSize: 16
+                                    label.text: (root.device.paired === true) ? "Unlink" : "Link"
+                                    label.font.family: "Red Hat Display"
+                                    label.font.bold: true
+
+                                    width: 190
+                                    height: 32
+        
+                                    onClicked: {
+                                        if(root.device.paired === true){
+                                            discovery.unlink(root.device);
+                                        }else {
+                                            discovery.link(root.device);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -261,12 +274,12 @@ Item {
     //I'll burn this down once I get a better idea of how to do it.
     //For now it'll serve its purpose.
     Rectangle{
-    id: cacheBurnBox
-    height: 200
-	width: 520
-    radius: 8
-    color: theme.background2
-    visible: false
+        id: cacheBurnBox
+        height: 200
+        width: 520
+        radius: 8
+        color: theme.background2
+        visible: false
 
         Text{
             topPadding: 16
