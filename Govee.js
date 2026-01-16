@@ -162,7 +162,7 @@ function SetLedCount(count){
 	ledCount = count;
 
 	CreateLedMap();
-	device.setSize([4, 3]);
+	device.setSize([5, 4]);
 	device.setControllableLeds(ledNames, ledPositions);
 }
 
@@ -172,16 +172,16 @@ function CreateLedMap(){
 		'Led 6', 'Led 7', 'Led 8', 'Led 9', 'Led 10'
 	];
 	ledPositions = [
-		[0, 0],
-		[1, 0],
-		[2, 0],
-		[3, 0],
 		[0, 1],
-		[3, 1],
 		[0, 2],
-		[1, 2],
-		[2, 2],
-		[3, 2]
+		[1, 3],
+		[2, 3],
+		[3, 3],
+		[2, 5],
+		[1, 5],
+		[0, 4],
+		[0, 3],
+		[0, 2]
 	];
 }
 
