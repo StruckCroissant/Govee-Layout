@@ -822,7 +822,7 @@ const GoveeDeviceLibrary = {
 		state: 1,
 		supportRazer: true,
 		supportDreamView: true,
-		ledCount: 10,
+		ledCount: 9,
 		ledLayout: [
 			[1, 1, 1, 1, 1],
 			[1, 1, 1, 1, 1]
