@@ -167,6 +167,10 @@ function SetLedCount(count){
 }
 
 function CreateLedMap(){
+	CreateDefaultLedMap();
+}
+
+function CreateDefaultLedMap() {
 	ledNames = [];
 	ledPositions = [];
 
