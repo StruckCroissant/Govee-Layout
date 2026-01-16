@@ -167,14 +167,29 @@ function SetLedCount(count){
 }
 
 function CreateLedMap(){
-	device.log('wtf');
-
-	CreateDefaultLedMap();
+	ledNames = [
+		'Led 1', 'Led 2', 'Led 3', 'Led 4', 'Led 5',
+		'Led 6', 'Led 7', 'Led 8', 'Led 9', 'Led 10'
+	];
+	ledPositions = [
+		[0, 0],
+		[1, 0],
+		[2, 0],
+		[3, 0],
+		[4, 0]
+		[0, 1],
+		[1, 1],
+		[2, 1],
+		[3, 1],
+		[4, 1]
+	];
 }
 
 function CreateDefaultLedMap() {
 	ledNames = [];
 	ledPositions = [];
+
+	ledNames 
 
 	for(let i = 0; i < ledCount; i++){
 		ledNames.push(`Led ${i + 1}`);
