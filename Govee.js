@@ -162,12 +162,12 @@ function SetLedCount(count){
 	ledCount = count;
 
 	CreateLedMap();
-	device.setSize([ledCount, 1]);
+	device.setSize([ledCount, 2]);
 	device.setControllableLeds(ledNames, ledPositions);
 }
 
 function CreateLedMap(){
-	device.log('test');
+	device.log(device.getSku());
 
 	CreateDefaultLedMap();
 }
