@@ -807,7 +807,11 @@ const GoveeDeviceLibrary = {
 		state: 1,
 		supportRazer: true,
 		supportDreamView: true,
-		ledCount: 10
+		ledCount: 10,
+		ledLayout: [
+			[1, 1, 1, 1, 1],
+			[1, 1, 1, 1, 1]
+		]
 	},
 	H610A: {
 		name: "Glide Lively Wall Light",
