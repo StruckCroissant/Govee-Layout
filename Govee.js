@@ -169,22 +169,43 @@ function SetLedCount(count){
 function CreateLedMap(){
 	ledNames = [
 		'Led 1', 'Led 2', 'Led 3', 'Led 4', 'Led 5',
-		'Led 6', 'Led 7', 'Led 8', 'Led 9', 'Led 10'
+		'Led 6', 'Led 7', 'Led 8', 'Led 9', 'Led 10',
+		'Led 11', 'Led 12', 'Led 13', 'Led 14', 'Led 15',
+		'Led 16', 'Led 17', 'Led 18', 'Led 19', 'Led 20',
+		'Led 21', 'Led 22', 'Led 23', 'Led 24', 'Led 25',
+		'Led 26', 'Led 27', 'Led 28'
 	];
 	ledPositions = [
+		[6, 0],
+		[5, 0],
+		[4, 0],
+		[3, 0],
 		[2, 0],
 		[1, 0],
 		[0, 1],
 		[0, 2],
 		[0, 3],
-		[1, 4],
-		[2, 4],
-		[3, 3],
-		[3, 2],
-		[3, 1]
+		[0, 4],
+		[0, 5],
+		[0, 6],
+		[0, 7],
+		[0, 8],
+		[1, 9],
+		[2, 9],
+		[3, 9],
+		[4, 9],
+		[5, 9],
+		[6, 9],
+		[7, 8],
+		[7, 7],
+		[7, 6],
+		[7, 5],
+		[7, 4],
+		[7, 3],
+		[7, 2],
+		[7, 1]
 	];
 }
-
 function CreateDefaultLedMap() {
 	ledNames = [];
 	ledPositions = [];
