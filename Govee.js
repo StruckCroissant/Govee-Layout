@@ -167,7 +167,7 @@ function SetLedCount(count){
 }
 
 function CreateLedMap(){
-	device.log(sku ?? 'wtf');
+	device.log('wtf');
 
 	CreateDefaultLedMap();
 }
