@@ -167,7 +167,7 @@ function SetLedCount(count){
 }
 
 function CreateLedMap(){
-	device.log(device.getSku());
+	device.log(device);
 
 	CreateDefaultLedMap();
 }
