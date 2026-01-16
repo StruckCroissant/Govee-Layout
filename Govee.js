@@ -167,7 +167,7 @@ function SetLedCount(count){
 }
 
 function CreateLedMap(){
-	console.log('test');
+	device.log('test');
 
 	CreateDefaultLedMap();
 }
@@ -207,8 +207,7 @@ function CreateSubDevice(subdevice){
 function hexToRgb(hex) {
 	const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 	const colors = [];
-	colors[0] = parseInt(result[1], 16);
-	colors[1] = parseInt(result[2], 16);
+	colors[0] = parseInt(result[1], 16)[1] = parseInt(result[2], 16);
 	colors[2] = parseInt(result[3], 16);
 
 	return colors;
