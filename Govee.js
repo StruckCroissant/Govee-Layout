@@ -167,6 +167,8 @@ function SetLedCount(count){
 }
 
 function CreateLedMap(){
+	console.log('test');
+
 	CreateDefaultLedMap();
 }
 
